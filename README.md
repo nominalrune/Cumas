@@ -13,7 +13,6 @@ cumas is a simple customer support management system. It is designed to be simpl
 
 # design
 ## database table(overview)
-
 ```mermaid
 erDiagram
     users {
@@ -60,7 +59,7 @@ erDiagram
 		int id
 		int contact_id
 		varchar(255) phone
-		varchar(511) notes "メモ"
+		varchar(1023) notes "メモ"
 	}
 	inquiries {
 		int id
@@ -75,30 +74,50 @@ erDiagram
 	}
 	messages {
 		int id
-		int inquiry_id "問い合わせ"
-		int contact_id "送信者"
-		varchar(511) path "メールが保存してあるパス"
+		int inquiry_id "結びつく問い合わせ"
+		int contact_email_id "送信者のメールアドレス"
+		int contact_phone_id "送信者の電話番号, nullable"
+		varchar(511) file "メールファイル名"
 		varchar(511) message_id "メールのmessageId"
 		varchar(511) reference_id "返信メールの場合、返信元メールのmessageId"
-		varchar(511) subject "件名"
+		varchar(1023) subject "件名"
 	}
 	categories {
 		int id
-		varchar(255) name
+		varchar(255) name "カテゴリ名"
 		int group_id "所属グループ"
 		int parent_id "親カテゴリ"
 	}
 	users ||--o{ groups_users :hasMany
 	groups ||--o{ groups_users :hasMany
 	groups ||--o{ groups :hasMany
-	groups||--o{mail_accounts :hasMany
-	inquiries }o--|| contact_emails:hasOne
+	groups ||--o{ mail_accounts :hasMany
+	inquiries }o--|| contacts:hasOne
 	inquiries }o--|| messages:hasOne
 	inquiries }o--o| users:belongsTo
 	inquiries }o--|| groups:belongsTo
 	inquiries }o--|| categories:belongsTo
 	groups ||--o{ categories :hasMany
-	contact||--o{ contacts_emails :belongsTo
-	contact||--o{ contacts_phones:belongsTo
+	contacts ||--o{ contact_emails :belongsTo
+	contacts ||--o{ contact_phones:belongsTo
 	categories |o--o{ categories :hasMany
+```
+
+## classes
+```mermaid
+classDiagram
+    Animal <|-- Zebra
+    class Duck{
+      +String beakColor
+      +swim()
+      +quack()
+    }
+    class Fish{
+      -int sizeInFeet
+      -canEat()
+    }
+    class Zebra{
+      +bool is_wild
+      +run()
+    }
 ```
