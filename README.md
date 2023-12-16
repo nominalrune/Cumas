@@ -103,7 +103,7 @@ erDiagram
 	categories |o--o{ categories :hasMany
 ```
 
-## classes
+## entities
 ```mermaid
 classDiagram
 	class User {
@@ -182,3 +182,17 @@ classDiagram
 		Category parent "親カテゴリ"
 	}
 ```
+# Domain
+## Category
+
+## Contact
+
+## Group
+
+## Inquiry
+
+## MailAccount
+
+## Message
+
+## User
