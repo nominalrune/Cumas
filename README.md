@@ -15,14 +15,14 @@ cumas is a simple customer support management system. It is designed to be simpl
 ## database table(overview)
 ```mermaid
 erDiagram
-    users {
-        int id
+	users {
+		int id
 		varchar name "ユーザ名"
 		varchar(255) email "メールアドレス"
 		text password
 		timestamp created_at
 		timestamp updated_at
-    }
+	}
 	groups {
 		int id
 		varchar(255) name
@@ -30,7 +30,7 @@ erDiagram
 		timestamp created_at
 		timestamp updated_at
 	}
-	groups_users {
+	user_groups {
 		int id
 		int user_id
 		int group_id
@@ -53,19 +53,19 @@ erDiagram
 		int id
 		int contact_id
 		varchar(255) email
-		varchar(511) notes "メモ"
+		text notes "メモ"
 	}
 	contact_phones {
 		int id
 		int contact_id
 		varchar(255) phone
-		varchar(1023) notes "メモ"
+		text notes "メモ"
 	}
 	inquiries {
 		int id
 		int category_id "問い合わせカテゴリ"
 		int email_id "問い合わせ者"
-		int status "対応状況"
+		varchar(255) status "対応状況"
 		int department_id "担当部署"
 		int agent_id "担当者"
 		text notes "メモ"
@@ -106,18 +106,79 @@ erDiagram
 ## classes
 ```mermaid
 classDiagram
-    Animal <|-- Zebra
-    class Duck{
-      +String beakColor
-      +swim()
-      +quack()
-    }
-    class Fish{
-      -int sizeInFeet
-      -canEat()
-    }
-    class Zebra{
-      +bool is_wild
-      +run()
-    }
+	class User {
+		int id
+		varchar name "ユーザ名"
+		varchar(255) email "メールアドレス"
+		text password
+		timestamp created_at
+		timestamp updated_at
+		Collection<Inquiry> inquiries
+	}
+	class Group {
+		int id
+		varchar(255) name
+		Group parent
+		timestamp created_at
+		timestamp updated_at
+		Collection<Inquiry> inquiries
+	}
+	class UserGroup {
+		int id
+		User user_
+		Group group_
+	}
+	class MailAccount {
+		int id
+		Group group_
+		varchar(255) name
+		text host
+		int port
+		text username
+		text password
+	}
+	class Contact {
+		int id
+		varchar(255) name "連絡先名前"
+		text notes "メモ"
+	}
+	class ContactEmail {
+		int id
+		Contact contact
+		varchar(255) email
+		text notes "メモ"
+	}
+	class ContactPhone {
+		int id
+		Contact contact
+		varchar(255) phone
+		text notes "メモ"
+	}
+	class Inquiry {
+		int id
+		Category category_id "問い合わせカテゴリ"
+		Contact contact "問い合わせ者"
+		varchar(255) status "対応状況"
+		Group department "担当部署"
+		User agent_id "担当者"
+		text notes "メモ"
+		timestamp created_at
+		timestamp updated_at
+	}
+	class Message {
+		int id
+		Inquiry inquiry "結びつく問い合わせ"
+		ContactEmail email "送信者のメールアドレス"
+		ContactPhone phone "送信者の電話番号, nullable"
+		varchar(511) file "メールファイル名"
+		varchar(511) message_id "メールのmessageId"
+		varchar(511) reference_id "返信メールの場合、返信元メールのmessageId"
+		varchar(1023) subject "件名"
+	}
+	class Category {
+		int id
+		varchar(255) name "カテゴリ名"
+		Group group "所属グループ"
+		Category parent "親カテゴリ"
+	}
 ```

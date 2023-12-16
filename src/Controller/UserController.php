@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 class UserController
 {
-	#[Route('/lucky/number', methods: ["GET", "HEAD"])]
+	#[Route('/', methods: ["GET", "HEAD"])]
     public function number(): Response
     {
         $number = random_int(0, 100);
