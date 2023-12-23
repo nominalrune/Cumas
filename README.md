@@ -108,76 +108,97 @@ erDiagram
 classDiagram
 	class User {
 		int id
-		varchar name "ユーザ名"
-		varchar(255) email "メールアドレス"
-		text password
+		string name "ユーザ名"
+		string email "メールアドレス"
+		string password
 		timestamp created_at
 		timestamp updated_at
 		Collection<Inquiry> inquiries
 	}
+```
+```mermaid
+classDiagram
 	class Group {
 		int id
-		varchar(255) name
+		string name
 		Group parent
 		timestamp created_at
 		timestamp updated_at
 		Collection<Inquiry> inquiries
 	}
+```
+```mermaid
+classDiagram
 	class UserGroup {
 		int id
 		User user_
 		Group group_
 	}
+```
+```mermaid
+classDiagram
 	class MailAccount {
 		int id
 		Group group_
-		varchar(255) name
-		text host
+		string name
+		string host
 		int port
-		text username
-		text password
+		string username
+		string password
 	}
+```
+```mermaid
+classDiagram
 	class Contact {
 		int id
-		varchar(255) name "連絡先名前"
-		text notes "メモ"
+		string name "連絡先名前"
+		string notes "メモ"
 	}
 	class ContactEmail {
 		int id
 		Contact contact
-		varchar(255) email
-		text notes "メモ"
+		string email
+		string notes "メモ"
 	}
 	class ContactPhone {
 		int id
 		Contact contact
-		varchar(255) phone
-		text notes "メモ"
+		string phone
+		string notes "メモ"
 	}
+```
+```mermaid
+classDiagram
 	class Inquiry {
 		int id
 		Category category_id "問い合わせカテゴリ"
 		Contact contact "問い合わせ者"
-		varchar(255) status "対応状況"
+		string status "対応状況"
 		Group department "担当部署"
 		User agent_id "担当者"
-		text notes "メモ"
+		string notes "メモ"
 		timestamp created_at
 		timestamp updated_at
 	}
+```
+```mermaid
+classDiagram
 	class Message {
 		int id
 		Inquiry inquiry "結びつく問い合わせ"
 		ContactEmail email "送信者のメールアドレス"
 		ContactPhone phone "送信者の電話番号, nullable"
-		varchar(511) file "メールファイル名"
-		varchar(511) message_id "メールのmessageId"
-		varchar(511) reference_id "返信メールの場合、返信元メールのmessageId"
-		varchar(1023) subject "件名"
+		string file "メールファイル名"
+		string message_id "メールのmessageId"
+		string reference_id "返信メールの場合、返信元メールのmessageId"
+		string subject "件名"
 	}
+```
+```mermaid
+classDiagram
 	class Category {
 		int id
-		varchar(255) name "カテゴリ名"
+		string name "カテゴリ名"
 		Group group "所属グループ"
 		Category parent "親カテゴリ"
 	}
@@ -185,14 +206,36 @@ classDiagram
 # Domain
 ## Category
 
+```mermaid
+classDiagram
+	
+```
 ## Contact
+```mermaid
+classDiagram
+```
 
 ## Group
+```mermaid
+classDiagram
+```
 
 ## Inquiry
+```mermaid
+classDiagram
+```
 
 ## MailAccount
+```mermaid
+classDiagram
+```
 
 ## Message
+```mermaid
+classDiagram
+```
 
 ## User
+```mermaid
+classDiagram
+```
