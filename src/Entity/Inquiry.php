@@ -16,20 +16,8 @@ class Inquiry
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $vategoryId = null;
-
-    #[ORM\Column]
-    private ?int $contactId = null;
-
     #[ORM\Column(length: 255)]
     private ?string $status = null;
-
-    #[ORM\Column]
-    private ?int $departmentId = null;
-
-    #[ORM\Column]
-    private ?int $agentId = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $notes = null;
@@ -63,30 +51,6 @@ class Inquiry
         return $this->id;
     }
 
-    public function getVategoryId(): ?int
-    {
-        return $this->vategoryId;
-    }
-
-    public function setVategoryId(int $vategoryId): static
-    {
-        $this->vategoryId = $vategoryId;
-
-        return $this;
-    }
-
-    public function getContactId(): ?int
-    {
-        return $this->contactId;
-    }
-
-    public function setContactId(int $contactId): static
-    {
-        $this->contactId = $contactId;
-
-        return $this;
-    }
-
     public function getStatus(): ?string
     {
         return $this->status;
@@ -95,30 +59,6 @@ class Inquiry
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getDepartmentId(): ?int
-    {
-        return $this->departmentId;
-    }
-
-    public function setDepartmentId(int $departmentId): static
-    {
-        $this->departmentId = $departmentId;
-
-        return $this;
-    }
-
-    public function getAgentId(): ?int
-    {
-        return $this->agentId;
-    }
-
-    public function setAgentId(int $agentId): static
-    {
-        $this->agentId = $agentId;
 
         return $this;
     }

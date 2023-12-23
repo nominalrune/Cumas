@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inquiry{% endblock %}
+
+{% block body %}
+    <h1>Inquiry</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ inquiry.id }}</td>
+            </tr>
+            <tr>
+                <th>VategoryId</th>
+                <td>{{ inquiry.vategoryId }}</td>
+            </tr>
+            <tr>
+                <th>ContactId</th>
+                <td>{{ inquiry.contactId }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ inquiry.status }}</td>
+            </tr>
+            <tr>
+                <th>DepartmentId</th>
+                <td>{{ inquiry.departmentId }}</td>
+            </tr>
+            <tr>
+                <th>AgentId</th>
+                <td>{{ inquiry.agentId }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ inquiry.notes }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ inquiry.createdAt ? inquiry.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ inquiry.updatedAt ? inquiry.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_inquiry_index') }}">back to list</a>
+
+    <a href="{{ path('app_inquiry_edit', {'id': inquiry.id}) }}">edit</a>
+
+    {{ include('inquiry/_delete_form.html.twig') }}
+{% endblock %}

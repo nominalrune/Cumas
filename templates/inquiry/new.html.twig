@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Inquiry{% endblock %}
+
+{% block body %}
+    <h1>Create new Inquiry</h1>
+
+    {{ include('inquiry/_form.html.twig') }}
+
+    <a href="{{ path('app_inquiry_index') }}">back to list</a>
+{% endblock %}

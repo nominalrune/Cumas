@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inquiry index{% endblock %}
+
+{% block body %}
+    <h1>Inquiry index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>VategoryId</th>
+                <th>ContactId</th>
+                <th>Status</th>
+                <th>DepartmentId</th>
+                <th>AgentId</th>
+                <th>Notes</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for inquiry in inquiries %}
+            <tr>
+                <td>{{ inquiry.id }}</td>
+                <td>{{ inquiry.vategoryId }}</td>
+                <td>{{ inquiry.contactId }}</td>
+                <td>{{ inquiry.status }}</td>
+                <td>{{ inquiry.departmentId }}</td>
+                <td>{{ inquiry.agentId }}</td>
+                <td>{{ inquiry.notes }}</td>
+                <td>{{ inquiry.createdAt ? inquiry.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ inquiry.updatedAt ? inquiry.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_inquiry_show', {'id': inquiry.id}) }}">show</a>
+                    <a href="{{ path('app_inquiry_edit', {'id': inquiry.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_inquiry_new') }}">Create new</a>
+{% endblock %}

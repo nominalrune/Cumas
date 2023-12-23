@@ -100,24 +100,24 @@ class Message
         return $this;
     }
 
-    public function getContactMail(): ?ContactEmail
+    public function getMail(): ?ContactEmail
     {
         return $this->mail;
     }
 
-    public function setContactMail(?ContactEmail $mail): static
+    public function setMail(?ContactEmail $mail): static
     {
         $this->mail = $mail;
 
         return $this;
     }
 
-    public function getContactPhone(): ?ContactPhone
+    public function getPhone(): ?ContactPhone
     {
         return $this->phone;
     }
 
-    public function setContactPhone(?ContactPhone $phone): static
+    public function setPhone(?ContactPhone $phone): static
     {
         $this->phone = $phone;
 

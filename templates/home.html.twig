@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}home{% endblock %}
+
+{% block body %}
+    <h1>home</h1>
+    <div style="display:flex;flex-direction:column;">
+    {% for page in ["user", "category", "contact", "group", "inquiry", "mail_account", "message"] %}
+        <a href='/{{ page }}'>{{page|title}}</a>
+    {% endfor %}
+    </div>
+{% endblock %}

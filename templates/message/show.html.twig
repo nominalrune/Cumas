@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message{% endblock %}
+
+{% block body %}
+    <h1>Message</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ message.id }}</td>
+            </tr>
+            <tr>
+                <th>File</th>
+                <td>{{ message.file }}</td>
+            </tr>
+            <tr>
+                <th>MessageId</th>
+                <td>{{ message.messageId }}</td>
+            </tr>
+            <tr>
+                <th>ReferenceId</th>
+                <td>{{ message.referenceId }}</td>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td>{{ message.subject }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_message_index') }}">back to list</a>
+
+    <a href="{{ path('app_message_edit', {'id': message.id}) }}">edit</a>
+
+    {{ include('message/_delete_form.html.twig') }}
+{% endblock %}

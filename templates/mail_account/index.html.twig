@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MailAccount index{% endblock %}
+
+{% block body %}
+    <h1>MailAccount index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Host</th>
+                <th>Port</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for mail_account in mail_accounts %}
+            <tr>
+                <td>{{ mail_account.id }}</td>
+                <td>{{ mail_account.name }}</td>
+                <td>{{ mail_account.host }}</td>
+                <td>{{ mail_account.port }}</td>
+                <td>{{ mail_account.username }}</td>
+                <td>{{ mail_account.password }}</td>
+                <td>
+                    <a href="{{ path('app_mail_account_show', {'id': mail_account.id}) }}">show</a>
+                    <a href="{{ path('app_mail_account_edit', {'id': mail_account.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_mail_account_new') }}">Create new</a>
+{% endblock %}
