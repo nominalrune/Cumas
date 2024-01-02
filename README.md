@@ -239,3 +239,80 @@ classDiagram
 ```mermaid
 classDiagram
 ```
+
+# UseCase
+## fetch customer inquiries from designated mail accounts
+1. cron executes command `app:check-mails`
+1. `app:check-mails` 
+	1. fetch mail accounts from database
+	1. fetch emails from mail servers, using the accounts
+	1. parse the emails
+		1. tell it's from a new customer
+			1. create a new contact
+			1. create a new inquiry
+			1. create a new message
+		1. tell it's from an existing customer
+			1. create a new inquiry
+			1. create a new message
+		1. tell it's a reply to an existing inquiry
+			1. create a new message
+			1. update the inquiry
+	1. save the mails to the mail achieve directory
+## assign inquiries to agents and track the progress
+1. login
+1. show the list of inquiries, filtered by the state or agent in charge
+1. select an inquiry
+1. show the inquiry detail
+1. change the state, assign an agent, change the category, add a note, etc.
+## agents can interract with customers via embedded mailling feature
+1. visit the inquiry detail page
+1. select a message to reply
+1. write a reply
+	1. attach a file
+	1. make it a draft
+1. send the reply
+	1. the sent reply is listed in the inquiry detail page among other messages
+	1. the state of the inquiry is changed to "ongoing"
+## manage customer information
+### show the list
+1. login as an agent
+1. show the list of contacts
+1. select a contact
+1. show the contact detail
+	1. name
+	1. email addresses
+	1. phone numbers
+	1. list of inquiries
+### create new
+1. login as a manager
+1. show the list of contacts
+1. create a new contact
+	1. add a name
+	1. add an email address
+	1. add a phone number
+	1. add a note
+### change/delete
+1. login as a manager
+1. show the list of contacts
+1. select a contact
+1. show the contact detail
+1. change the contact information
+	1. add a new email address
+	1. add a new phone number
+	1. add a note
+	1. change the name
+	1. change an email address
+	1. change a phone number
+	1. change a note
+1. delete the contact
+### send a message to a contact
+1. login as an agent
+1. show the list of contacts
+1. select a contact
+1. show the contact detail
+1. send a message
+	1. add a subject
+	1. add a message
+	1. attach a file
+	1. send the message
+		1. the sent message is listed in the contact detail page among other messages

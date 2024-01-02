@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MailAccountRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\String\Crypt;
 
 #[ORM\Entity(repositoryClass: MailAccountRepository::class)]
 class MailAccount
@@ -17,16 +18,19 @@ class MailAccount
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: "encrypted_string")]
     private ?string $host = null;
 
     #[ORM\Column]
     private ?int $port = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Type::BUILTIN_TYPE_BOOL)]
+    private ?bool $active = null;
+
+    #[ORM\Column(type: "encrypted_string")]
     private ?string $username = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: "encrypted_string")]
     private ?string $password = null;
 
     #[ORM\ManyToOne(inversedBy: 'mailAccounts')]
