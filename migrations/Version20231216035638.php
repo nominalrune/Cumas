@@ -25,7 +25,7 @@ final class Version20231216035638 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE message_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE contact_email (id INT NOT NULL, contact_id BIGINT NOT NULL, email VARCHAR(255) NOT NULL, notes TEXT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_CAB86C7BE7A1254A ON contact_email (contact_id)');
-        $this->addSql('CREATE TABLE message (id INT NOT NULL, inquiry_id INT NOT NULL, mail_id INT DEFAULT NULL, phone_id INT DEFAULT NULL, file VARCHAR(511) NOT NULL, message_id VARCHAR(511) NOT NULL, reference_id VARCHAR(511) DEFAULT NULL, subject VARCHAR(1023) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE message (id INT NOT NULL, sender_type INT NOT NULL, inquiry_id INT NOT NULL, mail_id INT DEFAULT NULL, phone_id INT DEFAULT NULL, file VARCHAR(511) NOT NULL, message_id VARCHAR(511) NOT NULL, reference_id VARCHAR(511) DEFAULT NULL, subject VARCHAR(1023) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_B6BD307FA7AD6D71 ON message (inquiry_id)');
         $this->addSql('CREATE INDEX IDX_B6BD307FC8776F01 ON message (mail_id)');
         $this->addSql('CREATE INDEX IDX_B6BD307F3B7323CB ON message (phone_id)');

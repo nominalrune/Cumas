@@ -1,7 +1,7 @@
-# Cumas - A simple customer support management system
+# Scims - A simple customer inquiry management system 
 [![Build Status](https://travis-ci.org/lb-cumas/cumas.svg?branch=master)](https://travis-ci.org/lb-cumas/cumas)[![Coverage Status](https://coveralls.io/repos/github/lb-cumas/cumas/badge.svg?branch=master)](https://coveralls.io/github/lb-cumas/cumas?branch=master)![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-cumas is a simple customer support management system. It is designed to be simple and easy to use. It is written in php symphony framework.
+scims is a simple customer support management system. It is designed to be simple and easy to use. It is written in php symphony framework.
 
 # instration
 
@@ -63,6 +63,7 @@ erDiagram
 	}
 	inquiries {
 		int id
+		varchar(511) title "タイトル"
 		int category_id "問い合わせカテゴリ"
 		int email_id "問い合わせ者"
 		varchar(255) status "対応状況"
@@ -171,6 +172,7 @@ classDiagram
 classDiagram
 	class Inquiry {
 		int id
+		string title "タイトル"
 		Category category_id "問い合わせカテゴリ"
 		Contact contact "問い合わせ者"
 		string status "対応状況"
@@ -185,6 +187,7 @@ classDiagram
 classDiagram
 	class Message {
 		int id
+		int sender_type "お客様かスタッフか"
 		Inquiry inquiry "結びつく問い合わせ"
 		ContactEmail email "送信者のメールアドレス"
 		ContactPhone phone "送信者の電話番号, nullable"
@@ -203,43 +206,6 @@ classDiagram
 		Category parent "親カテゴリ"
 	}
 ```
-# Domain
-## Category
-
-```mermaid
-classDiagram
-	
-```
-## Contact
-```mermaid
-classDiagram
-```
-
-## Group
-```mermaid
-classDiagram
-```
-
-## Inquiry
-```mermaid
-classDiagram
-```
-
-## MailAccount
-```mermaid
-classDiagram
-```
-
-## Message
-```mermaid
-classDiagram
-```
-
-## User
-```mermaid
-classDiagram
-```
-
 # UseCase
 ## fetch customer inquiries from designated mail accounts
 1. cron executes command `app:check-mails`
@@ -258,6 +224,8 @@ classDiagram
 			1. create a new message
 			1. update the inquiry
 	1. save the mails to the mail achieve directory
+## webui
+
 ## assign inquiries to agents and track the progress
 1. login
 1. show the list of inquiries, filtered by the state or agent in charge

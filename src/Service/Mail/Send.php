@@ -5,44 +5,51 @@ namespace App\Service\Mail;
 use App\Repository\MailAccountRepository;
 use App\Entity\MailAccount;
 use PHPMailer\PHPMailer\PHPMailer;
-
+use App\Service\String\Crypt;
+use Symfony\Component\Config\Resource\FileResource;
 class Send
 {
-	public function __construct()
-	{
-		echo 'Receive';
+	public function __construct(
+		private MailAccountRepository $repo,
+		private Crypt $crypt,
+	) {
 	}
-	function fetchAccounts(MailAccountRepository $repo)
+	private function fetchAccount(string $sender) : MailAccount
 	{
-		$accounts= $repo->findBy(['active'=>true]);
-		return $accounts;
+		$account = $this->repo->findOneBy(
+			['username' => $this->crypt->encrypt($sender)]
+		);
+		if (! $account) {
+			throw new \Exception("No account found for $sender");
+		}
+		return $account;
 	}
+	/**
+	 * @param FileResource[] $attachments attachments
+	 */
 	public function send(
+		string $sender,
 		string $to,
 		string $subject,
-		string $message,
+		string $message = null,
+		array $attachments = null,
 		string $additional_headers = "",
 		string $additional_params = null
-	):string {
-		// $headers=var_dump($additional_headers,true);
-		// file_put_contents("headers.txt", '['.date('Y-m-dTh:m').']'.$headers.PHP_EOL, FILE_APPEND);
-		$mailer = $this->setUp();
-		//Set who the message is to be sent to
+	) : string {$account = $this->fetchAccount($sender);
+		$mailer = $this->setUp($account);
 		$mailer->addAddress($to);
 		$mailer->Subject = $subject;
-		// $mailer->msgHTML($message);
-		$mailer->Body = $message;
-		// var_dump($mailer);
-
+		$mailer->msgHTML($message); // TODO imageのinline化を活用したい
+		// $mailer->Body = $plainMessage;
 		//Attach an image file
-		// $mailer->addAttachment('images/phpmailer_mini.png');
+		foreach ($attachments as $attachment){
+			$mailer->addAttachment($attachment->getResource());
+		}
 		// $mailer->preSend();
 		//send the message, check for errors
-		if (!$mailer->send()) {
-			echo 'Mailer Error: ' . $mailer->ErrorInfo;
+		if (! $mailer->send()) {
 			throw new \Exception('Mailer Error: ' . $mailer->ErrorInfo);
 		} else {
-			echo 'Message sent!';
 			$message = $mailer->getSentMIMEMessage();
 			return $message;
 		}

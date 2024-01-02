@@ -35,7 +35,7 @@ final class Version20231216025656 extends AbstractMigration
         $this->addSql('CREATE TABLE "group" (id INT NOT NULL, name VARCHAR(255) NOT NULL, parent_id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN "group".created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN "group".updated_at IS \'(DC2Type:datetime_immutable)\'');
-        $this->addSql('CREATE TABLE inquiry (id INT NOT NULL, vategory_id INT NOT NULL, contact_id INT NOT NULL, status VARCHAR(255) NOT NULL, department_id INT NOT NULL, agent_id INT NOT NULL, notes TEXT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE inquiry (id INT NOT NULL, category_id INT NOT NULL, contact_id INT NOT NULL, title VARCHAR(511) NOT NULL, status VARCHAR(255) NOT NULL, department_id INT NOT NULL, agent_id INT NOT NULL, notes TEXT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN inquiry.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN inquiry.updated_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE TABLE mail_account (id INT NOT NULL, group_id INT NOT NULL, active BOOLEAN NOT NULL, name VARCHAR(255) NOT NULL, host TEXT NOT NULL, port INT NOT NULL, username TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id))');

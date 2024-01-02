@@ -16,9 +16,15 @@ class Inquiry
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: Types::BIGINT)]
+    private ?string $contactId = null;
+    
+    #[ORM\Column(length: 511)]
+    private ?string $title = null;
+    
     #[ORM\Column(length: 255)]
     private ?string $status = null;
-
+    
     #[ORM\Column(type: Types::TEXT)]
     private ?string $notes = null;
 
@@ -27,6 +33,11 @@ class Inquiry
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Contact $contact = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -51,6 +62,30 @@ class Inquiry
         return $this->id;
     }
 
+    public function getContactId(): ?string
+    {
+        return $this->contactId;
+    }
+
+    public function setContactId(string $contactId): static
+    {
+        $this->contactId = $contactId;
+
+        return $this;
+    }
+    
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+    
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+    
     public function getStatus(): ?string
     {
         return $this->status;

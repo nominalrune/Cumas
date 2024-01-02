@@ -13,6 +13,9 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column]
+    private ?int $sender_type = null;
+    
     #[ORM\Column(length: 511)]
     private ?string $file = null;
     
@@ -40,6 +43,18 @@ class Message
         return $this->id;
     }
 
+    public function getSenderType(): ?int
+    {
+        return $this->sender_type;
+    }
+    
+    public function setSenderType(int $sender_type): static
+    {
+        $this->sender_type = $sender_type;
+
+        return $this;
+    }
+    
     public function getFile(): ?string
     {
         return $this->file;
