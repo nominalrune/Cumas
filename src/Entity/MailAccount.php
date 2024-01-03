@@ -37,6 +37,76 @@ class MailAccount
     #[ORM\JoinColumn(nullable: false)]
     private ?Group $group_ = null;
 
+    public function __construct(
+        private MailAccountRepository $repository
+        )
+    {
+    }
+    
+    public static function create(
+        string $name,
+        string $host,
+        int $port,
+        string $username,
+        string $password,
+        bool $active,
+        Group $group,
+        
+        ): self
+    {
+        $account = new self();
+        $account->setName($name);
+        $account->setHost($host);
+        $account->setPort($port);
+        $account->setUsername($username);
+        $account->setPassword($password);
+        $account->setGroup($group);
+        $account->setActive($active);
+        $account->save();
+
+        return $account;
+    }
+    
+    public function update(
+        ?string $name,
+        ?string $host,
+        ?int $port,
+        ?string $username,
+        ?string $password,
+        ?bool $active,
+        ?Group $group,): self
+    {
+        if($name !== null){
+            $this->setName($name);
+        }
+        if($host !== null){
+            $this->setHost($host);
+        }
+        if($port !== null){
+            $this->setPort($port);
+        }
+        if($username !== null){
+            $this->setUsername($username);
+        }
+        if($password !== null){
+            $this->setPassword($password);
+        }
+        if($active !== null){
+            $this->setActive($active);
+        }
+        if($group !== null){
+            $this->setGroup($group);
+        }
+        $this->save();
+
+        return $this;
+    }
+    
+    private function save(): void
+    {
+        $this->repository->save($this);
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -111,6 +181,18 @@ class MailAccount
     {
         $this->group_ = $group_;
 
+        return $this;
+    }
+    
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+    
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
+        
         return $this;
     }
 }

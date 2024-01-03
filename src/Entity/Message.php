@@ -38,6 +38,81 @@ class Message
     #[ORM\ManyToOne]
     private ?ContactPhone $phone = null;
 
+    public function __construct(
+        private MessageRepository $repository
+        )
+    {
+    }
+    
+    public static function create(
+        Inquiry $inquiry,
+        ?ContactEmail $mail,
+        ?ContactPhone $phone,
+        string $subject,
+        int $sender_type,
+        string $file,
+        string $messageId,
+        string $referenceId
+        ): self
+    {
+        $message = new self();
+        $message->setInquiry($inquiry);
+        $message->setMail($mail);
+        $message->setPhone($phone);
+        $message->setSubject($subject);
+        $message->setSenderType($sender_type);
+        $message->setFile($file);
+        $message->setMessageId($messageId);
+        $message->setReferenceId($referenceId);
+        $message->save();
+
+        return $message;
+    }
+    
+    public function update(
+        ?Inquiry $inquiry,
+        ?ContactEmail $mail,
+        ?ContactPhone $phone,
+        ?string $subject,
+        ?int $sender_type,
+        ?string $file,
+        ?string $messageId,
+        ?string $referenceId): self
+    {
+        if($inquiry !== null){
+            $this->setInquiry($inquiry);
+        }
+        if($mail !== null){
+            $this->setMail($mail);
+        }
+        if($phone !== null){
+            $this->setPhone($phone);
+        }
+        if($subject !== null){
+            $this->setSubject($subject);
+        }
+        if($sender_type !== null){
+            $this->setSenderType($sender_type);
+        }
+        if($file !== null){
+            $this->setFile($file);
+        }
+        if($messageId !== null){
+            $this->setMessageId($messageId);
+        }
+        if($referenceId !== null){
+            $this->setReferenceId($referenceId);
+        }
+        $this->save();
+
+        return $this;
+    }
+    
+    private function save(): void
+    {
+        $this->repository->save($this);
+    }    
+    
     public function getId(): ?int
     {
         return $this->id;

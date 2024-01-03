@@ -30,7 +30,7 @@ final class Version20231216025656 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE user_group_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE category (id INT NOT NULL, name VARCHAR(255) NOT NULL, group_id INT NOT NULL, parent_id INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE contact (id INT NOT NULL, name VARCHAR(255) NOT NULL, notes TEXT NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE contact_emails (id INT NOT NULL, contact_id BIGINT NOT NULL, email VARCHAR(255) NOT NULL, notes TEXT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE contact_emails (id INT NOT NULL, contact_id INT NOT NULL, email VARCHAR(255) NOT NULL, notes TEXT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE contact_phone (id INT NOT NULL, contact_id INT NOT NULL, phone VARCHAR(255) NOT NULL, notes TEXT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE "group" (id INT NOT NULL, name VARCHAR(255) NOT NULL, parent_id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN "group".created_at IS \'(DC2Type:datetime_immutable)\'');

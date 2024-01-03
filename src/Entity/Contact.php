@@ -28,10 +28,38 @@ class Contact
     #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactPhone::class)]
     private Collection $phones;
 
-    public function __construct()
+    public function __construct(private ContactRepository $repository)
     {
         $this->emails = new ArrayCollection();
         $this->phones = new ArrayCollection();
+    }
+    
+    public static function create(string $name, string $notes): self
+    {
+        $contact = new self();
+        $contact->setName($name);
+        $contact->setNotes($notes);
+        $contact->save();
+
+        return $contact;
+    }
+    
+    public function update(?string $name, ?string $notes): self
+    {
+        if ($name !== null) {
+            $this->setName($name);
+        }
+        if ($notes !== null) {
+            $this->setNotes($notes);
+        }
+        $this->save();
+
+        return $this;
+    }
+    
+    private function save(): void
+    {
+        $this->repository->save($this);
     }
 
     public function getId(): ?int

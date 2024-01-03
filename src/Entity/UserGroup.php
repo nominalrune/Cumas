@@ -21,6 +21,31 @@ class UserGroup
     #[ORM\JoinColumn(nullable: false)]
     private ?Group $group_ = null;
 
+    public function __construct(
+        private UserGroupRepository $repository
+        )
+    {
+    }
+    
+    public static function create(
+        User $user,
+        Group $group
+        ): self
+    {
+        $userGroup = new self();
+        $userGroup->setUser($user);
+        $userGroup->setGroup($group);
+        $userGroup->save();
+
+        return $userGroup;
+    }
+    
+    private function save(): void
+    {
+        $this->repository->save($this);
+    }
+
+    
     public function getId(): ?int
     {
         return $this->id;

@@ -27,6 +27,41 @@ class ContactPhone
     #[ORM\JoinColumn(nullable: false)]
     private ?Contact $contact = null;
 
+    public function __construct(
+        private ContactPhoneRepository $repository
+        )
+    {
+    }
+    
+    public static function create(
+        int $contactId,
+        string $phone,
+        ?string $notes = null
+        ): self
+    {
+        $contact = new self();
+        $contact->setContactId($contactId);
+        $contact->setPhone($phone);
+        $contact->setNotes($notes);
+        $contact->save();
+
+        return $contact;
+    }
+    
+    public function update(
+        string $notes): self
+    {
+        $this->setNotes($notes);
+        $this->save();
+
+        return $this;
+    }
+    
+    private function save(): void
+    {
+        $this->repository->save($this);
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

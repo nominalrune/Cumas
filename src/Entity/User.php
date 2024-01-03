@@ -40,12 +40,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $inquiries;
 
 
-    public function __construct()
+    public function __construct(
+        private UserRepository $repository
+        )
     {
         $this->userGroups = new ArrayCollection();
         $this->inquiries = new ArrayCollection();
     }
 
+    public static function create(
+        string $name,
+        string $email,
+        string $password,
+        ?UserGroup $userGroup = null
+        ): self
+    {
+        $user = new self();
+        $user->setName($name);
+        $user->setEmail($email);
+        $user->setPassword($password);
+        if ($userGroup) {
+            $user->addUserGroup($userGroup);
+        }
+        $user->save();
+
+        return $user;
+    }
+    
+    public function update(
+        ?string $name,
+        ?string $email,
+        ?string $password
+        ): self
+    {
+        if($name !== null) {
+            $this->setName($name);
+        }
+        if($email !== null) {
+            $this->setEmail($email);
+        }
+        if($password !== null) {
+            $this->setPassword($password);
+        }
+        $this->save();
+
+        return $this;
+    }
+    
+    private function save(): void
+    {
+        $this->repository->save($this);
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
