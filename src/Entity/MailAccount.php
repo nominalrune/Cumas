@@ -19,12 +19,18 @@ class MailAccount
     private ?string $name = null;
 
     #[ORM\Column(type: "encrypted_string")]
-    private ?string $host = null;
+    private ?string $popServer = null;
 
     #[ORM\Column]
-    private ?int $port = null;
+    private ?int $popPort = null;
 
-    #[ORM\Column(type: Type::BUILTIN_TYPE_BOOL)]
+    #[ORM\Column(type: "encrypted_string")]
+    private ?string $smtpServer = null;
+
+    #[ORM\Column]
+    private ?int $smtpPort = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
     private ?bool $active = null;
 
     #[ORM\Column(type: "encrypted_string")]
@@ -38,11 +44,9 @@ class MailAccount
     private ?Group $group_ = null;
 
     public function __construct(
-        private MailAccountRepository $repository
-        )
-    {
+    ) {
     }
-    
+
     public static function create(
         string $name,
         string $host,
@@ -51,9 +55,8 @@ class MailAccount
         string $password,
         bool $active,
         Group $group,
-        
-        ): self
-    {
+
+    ) : self {
         $account = new self();
         $account->setName($name);
         $account->setHost($host);
@@ -62,11 +65,10 @@ class MailAccount
         $account->setPassword($password);
         $account->setGroup($group);
         $account->setActive($active);
-        $account->save();
 
         return $account;
     }
-    
+
     public function update(
         ?string $name,
         ?string $host,
@@ -74,125 +76,143 @@ class MailAccount
         ?string $username,
         ?string $password,
         ?bool $active,
-        ?Group $group,): self
+        ?Group $group, ) : self
     {
-        if($name !== null){
+        if ($name !== null) {
             $this->setName($name);
         }
-        if($host !== null){
+        if ($host !== null) {
             $this->setHost($host);
         }
-        if($port !== null){
+        if ($port !== null) {
             $this->setPort($port);
         }
-        if($username !== null){
+        if ($username !== null) {
             $this->setUsername($username);
         }
-        if($password !== null){
+        if ($password !== null) {
             $this->setPassword($password);
         }
-        if($active !== null){
+        if ($active !== null) {
             $this->setActive($active);
         }
-        if($group !== null){
+        if ($group !== null) {
             $this->setGroup($group);
         }
-        $this->save();
 
         return $this;
     }
-    
-    private function save(): void
-    {
-        $this->repository->save($this);
-    }
-    
-    public function getId(): ?int
+
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName() : ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name) : static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getHost(): ?string
+    public function getPOPServer() : ?string
     {
-        return $this->host;
+        return $this->popServer;
     }
 
-    public function setHost(string $host): static
+    public function setPOPServer(string $server) : static
     {
-        $this->host = $host;
+        $this->popServer = $server;
 
         return $this;
     }
 
-    public function getPort(): ?int
+    public function getPOPPort() : ?int
     {
-        return $this->port;
+        return $this->popPort;
     }
 
-    public function setPort(int $port): static
+    public function setPOPPort(int $port) : static
     {
-        $this->port = $port;
+        $this->popPort = $port;
 
         return $this;
     }
 
-    public function getUsername(): ?string
+    public function getSMTPServer() : ?string
+    {
+        return $this->smtpServer;
+    }
+    
+    public function setSMTPServer(string $server) : static
+    {
+        $this->smtpServer = $server;
+
+        return $this;
+    }
+    
+    public function getSMTPPort() : ?int
+    {
+        return $this->smtpPort;
+    }
+    
+    public function setSMTPPort(int $port) : static
+    {
+        $this->smtpPort = $port;
+
+        return $this;
+    }
+
+    public function getUsername() : ?string
     {
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username) : static
     {
         $this->username = $username;
 
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword() : ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password) : static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getGroup(): ?Group
+    public function getGroup() : ?Group
     {
         return $this->group_;
     }
 
-    public function setGroup(?Group $group_): static
+    public function setGroup(?Group $group_) : static
     {
         $this->group_ = $group_;
 
         return $this;
     }
-    
-    public function getActive(): ?bool
+
+    public function getActive() : ?bool
     {
         return $this->active;
     }
-    
-    public function setActive(bool $active): static
+
+    public function setActive(bool $active) : static
     {
         $this->active = $active;
-        
+
         return $this;
     }
 }

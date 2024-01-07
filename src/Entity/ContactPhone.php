@@ -28,7 +28,6 @@ class ContactPhone
     private ?Contact $contact = null;
 
     public function __construct(
-        private ContactPhoneRepository $repository
         )
     {
     }
@@ -43,7 +42,6 @@ class ContactPhone
         $contact->setContactId($contactId);
         $contact->setPhone($phone);
         $contact->setNotes($notes);
-        $contact->save();
 
         return $contact;
     }
@@ -52,16 +50,10 @@ class ContactPhone
         string $notes): self
     {
         $this->setNotes($notes);
-        $this->save();
 
         return $this;
     }
-    
-    private function save(): void
-    {
-        $this->repository->save($this);
-    }
-    
+        
     public function getId(): ?int
     {
         return $this->id;

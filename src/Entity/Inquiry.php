@@ -40,7 +40,7 @@ class Inquiry
     private ?Contact $contact = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'inquiries')]
@@ -53,7 +53,6 @@ class Inquiry
     private Collection $messages;
 
     public function __construct(
-        private InquiryRepository $repository
     ) {
         $this->messages = new ArrayCollection();
     }
@@ -75,7 +74,6 @@ class Inquiry
         $inquiry->setCategory($category);
         $inquiry->setDepartment($department);
         $inquiry->setAgent($agent);
-        $inquiry->save();
 
         return $inquiry;
     }
@@ -110,15 +108,10 @@ class Inquiry
         if ($agent !== null) {
             $this->setAgent($agent);
         }
-        $this->save();
 
         return $this;
     }
 
-    private function save() : void
-    {
-        $this->repository->save($this);
-    }
 
 
     public function getId() : ?int

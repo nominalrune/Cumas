@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/mail/account')]
+#[Route('/mail_account')]
 class MailAccountController extends AbstractController
 {
     #[Route('/', name: 'app_mail_account_index', methods: ['GET'])]

@@ -39,7 +39,6 @@ class Message
     private ?ContactPhone $phone = null;
 
     public function __construct(
-        private MessageRepository $repository
         )
     {
     }
@@ -64,7 +63,6 @@ class Message
         $message->setFile($file);
         $message->setMessageId($messageId);
         $message->setReferenceId($referenceId);
-        $message->save();
 
         return $message;
     }
@@ -103,15 +101,9 @@ class Message
         if($referenceId !== null){
             $this->setReferenceId($referenceId);
         }
-        $this->save();
 
         return $this;
     }
-    
-    private function save(): void
-    {
-        $this->repository->save($this);
-    }    
     
     public function getId(): ?int
     {

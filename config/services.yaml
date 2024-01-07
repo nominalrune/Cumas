@@ -11,10 +11,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    doctrine.custom_types.encrypted_string:
-        class: App\Doctrine\Type\EncryptedStringType
-        tags:
-            - { name: doctrine.dbal.type, alias: encrypted_string }
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -27,3 +23,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+    doctrine.custom_types.encrypted_string:
+        class: App\Doctrine\Type\EncryptedStringType
+        tags:
+            - { name: doctrine.dbal.type, alias: encrypted_string }

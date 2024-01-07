@@ -41,7 +41,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     public function __construct(
-        private UserRepository $repository
         )
     {
         $this->userGroups = new ArrayCollection();
@@ -62,7 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($userGroup) {
             $user->addUserGroup($userGroup);
         }
-        $user->save();
 
         return $user;
     }
@@ -82,14 +80,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if($password !== null) {
             $this->setPassword($password);
         }
-        $this->save();
 
         return $this;
-    }
-    
-    private function save(): void
-    {
-        $this->repository->save($this);
     }
     
     public function getId(): ?int

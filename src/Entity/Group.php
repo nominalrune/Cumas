@@ -44,7 +44,6 @@ class Group
     private Collection $categories;
 
     public function __construct(
-        private GroupRepository $repository
     ) {
         $this->groups = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
@@ -62,7 +61,6 @@ class Group
         $now = new \DateTimeImmutable();
         $group->setCreatedAt($now);
         $group->setUpdatedAt($now);
-        $group->save();
 
         return $group;
     }
@@ -74,14 +72,8 @@ class Group
         $this->setName($name);
         $this->setParent($parent);
         $this->setUpdatedAt(new \DateTimeImmutable());
-        $this->save();
 
         return $this;
-    }
-
-    private function save() : void
-    {
-        $this->repository->save($this);
     }
 
     public function getId() : ?int

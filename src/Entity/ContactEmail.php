@@ -27,11 +27,12 @@ class ContactEmail
     #[ORM\JoinColumn(nullable: false)]
     private ?Contact $contact = null;
     
-    public function __construct(private ContactEmailRepository $repository)
+    public function __construct()
     {
     }
     
     public static function create(
+        ContactEmailRepository $repository,
         int $contactId,
         string $email,
         ?string $notes = null,
@@ -41,22 +42,17 @@ class ContactEmail
         $contact->setContactId($contactId);
         $contact->setEmail($email);
         $contact->setNotes($notes);
-        $contact->save();
 
         return $contact;
     }
     
-    public function update(string $notes): self
+    public function update(
+        ContactEmailRepository $repository,
+        string $notes): self
     {
         $this->setNotes($notes);
-        $this->save();
 
         return $this;
-    }
-    
-    private function save(): void
-    {
-        $this->repository->save($this);
     }
     
     public function getId(): ?int

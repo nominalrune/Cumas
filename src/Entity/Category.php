@@ -44,28 +44,22 @@ class Category
     #[Groups(['category:list', 'category:item'])]
     private Collection $categories;
 
-    public function __construct(private CategoryRepository $repository)
+    public function __construct()
     {
         $this->categories = new ArrayCollection();
     }
-    
-    public function save(): void
-    {
-        $this->repository->save($this);
-    }
-    
-    public static function create(string $name, Group $group, ?self $parent = null): self
+        
+    public static function create( string $name, Group $group, ?self $parent = null): self
     {
         $category = new self();
         $category->setName($name);
         $category->setGroup($group);
         $category->setParent($parent);
-        $category->save();
 
         return $category;
     }
     
-    public function update(?string $name, ?Group $group, ?self $parent = null): self
+    public function update( ?string $name, ?Group $group, ?self $parent = null): self
     {
         if(!is_null($name)){
             $this->setName($name);
@@ -76,7 +70,6 @@ class Category
         if(!is_null($parent)){
             $this->setParent($parent);
         }
-        $this->save();
 
         return $this;
     }

@@ -22,7 +22,6 @@ class UserGroup
     private ?Group $group_ = null;
 
     public function __construct(
-        private UserGroupRepository $repository
         )
     {
     }
@@ -35,17 +34,10 @@ class UserGroup
         $userGroup = new self();
         $userGroup->setUser($user);
         $userGroup->setGroup($group);
-        $userGroup->save();
 
         return $userGroup;
     }
-    
-    private function save(): void
-    {
-        $this->repository->save($this);
-    }
-
-    
+        
     public function getId(): ?int
     {
         return $this->id;

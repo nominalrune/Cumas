@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MessageType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder
             ->add('file')
@@ -22,20 +22,20 @@ class MessageType extends AbstractType
             ->add('subject')
             ->add('inquiry', EntityType::class, [
                 'class' => Inquiry::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
             ->add('mail', EntityType::class, [
                 'class' => ContactEmail::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
             ->add('phone', EntityType::class, [
                 'class' => ContactPhone::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults([
             'data_class' => Message::class,
