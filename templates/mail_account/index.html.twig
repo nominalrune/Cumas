@@ -10,10 +10,11 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Host</th>
-                <th>Port</th>
+                <th>POP Server</th>
+                <th>POP Port</th>
+                <th>SMTP Server</th>
+                <th>SMTP Port</th>
                 <th>Username</th>
-                <th>Password</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -24,8 +25,9 @@
                 <td>{{ mail_account.name }}</td>
                 <td>{{ mail_account.popServer }}</td>
                 <td>{{ mail_account.popPort }}</td>
+                <td>{{ mail_account.smtpServer }}</td>
+                <td>{{ mail_account.smtpPort }}</td>
                 <td>{{ mail_account.username }}</td>
-                <td>{{ mail_account.password }}</td>
                 <td>
                     <a href="{{ path('app_mail_account_show', {'id': mail_account.id}) }}">show</a>
                     <a href="{{ path('app_mail_account_edit', {'id': mail_account.id}) }}">edit</a>

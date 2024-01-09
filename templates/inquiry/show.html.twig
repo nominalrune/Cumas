@@ -12,24 +12,24 @@
                 <td>{{ inquiry.id }}</td>
             </tr>
             <tr>
-                <th>VategoryId</th>
-                <td>{{ inquiry.vategoryId }}</td>
+                <th>categoryId</th>
+                <td>{{ inquiry.category }}</td>
             </tr>
             <tr>
-                <th>ContactId</th>
-                <td>{{ inquiry.contactId }}</td>
+                <th>Contact</th>
+                <td>{{ inquiry.contact }}</td>
             </tr>
             <tr>
                 <th>Status</th>
                 <td>{{ inquiry.status }}</td>
             </tr>
             <tr>
-                <th>DepartmentId</th>
-                <td>{{ inquiry.departmentId }}</td>
+                <th>Department</th>
+                <td>{{ inquiry.department }}</td>
             </tr>
             <tr>
-                <th>AgentId</th>
-                <td>{{ inquiry.agentId }}</td>
+                <th>Agent</th>
+                <td>{{ inquiry.agent }}</td>
             </tr>
             <tr>
                 <th>Notes</th>
@@ -42,6 +42,10 @@
             <tr>
                 <th>UpdatedAt</th>
                 <td>{{ inquiry.updatedAt ? inquiry.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>messages</th>
+                <td>{{ inquiry.messages|join(', ') }}</td>
             </tr>
         </tbody>
     </table>

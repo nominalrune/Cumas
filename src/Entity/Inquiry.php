@@ -16,9 +16,6 @@ class Inquiry
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $contactId = null;
-
     #[ORM\Column(length: 511)]
     private ?string $title = null;
 
@@ -52,22 +49,26 @@ class Inquiry
     #[ORM\OneToMany(mappedBy: 'inquiry', targetEntity: Message::class)]
     private Collection $messages;
 
+    public function __toString(): string
+    {
+        return $this->getTitle();
+    }
     public function __construct(
     ) {
         $this->messages = new ArrayCollection();
     }
 
     public static function create(
-        int $contactId,
+        Contact $contact,
         string $title,
         string $status,
         string $notes,
-        Category $category,
+        ?Category $category,
         Group $department,
-        User $agent,
+        ?User $agent,
     ) : self {
         $inquiry = new self();
-        $inquiry->setContactId($contactId);
+        $inquiry->setContact($contact);
         $inquiry->setTitle($title);
         $inquiry->setStatus($status);
         $inquiry->setNotes($notes);
@@ -79,7 +80,7 @@ class Inquiry
     }
 
     public function update(
-        ?int $contactId,
+        ?Contact $contact,
         ?string $title,
         ?string $status,
         ?string $notes,
@@ -87,8 +88,8 @@ class Inquiry
         ?Group $department,
         ?User $agent,
     ) : self {
-        if ($contactId !== null) {
-            $this->setContactId($contactId);
+        if ($contact !== null) {
+            $this->setContact($contact);
         }
         if ($title !== null) {
             $this->setTitle($title);
@@ -119,14 +120,14 @@ class Inquiry
         return $this->id;
     }
 
-    public function getContactId() : ?int
+    public function getContact() : ?Contact
     {
-        return $this->contactId;
+        return $this->contact;
     }
 
-    public function setContactId(int $contactId) : static
+    public function setContact(Contact $contact) : static
     {
-        $this->contactId = $contactId;
+        $this->contact = $contact;
 
         return $this;
     }

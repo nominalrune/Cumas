@@ -11,6 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 class Contact
 {
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,16 +26,16 @@ class Contact
     #[ORM\Column(type: Types::TEXT)]
     private ?string $notes = null;
 
-    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactEmail::class)]
+    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactEmail::class, cascade: ['persist', 'remove'])]
     private Collection $emails;
 
-    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactPhone::class)]
+    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactPhone::class, cascade: ['persist', 'remove'])]
     private Collection $phones;
 
     public function __construct()
     {
-        // $this->emails = new ArrayCollection();
-        // $this->phones = new ArrayCollection();
+        $this->emails = new ArrayCollection();
+        $this->phones = new ArrayCollection();
     }
     
     public static function create(string $name, string $notes): self

@@ -27,6 +27,10 @@ class ContactPhone
     #[ORM\JoinColumn(nullable: false)]
     private ?Contact $contact = null;
 
+    public function __toString(): string
+    {
+        return $this->getPhone();
+    }
     public function __construct(
         )
     {

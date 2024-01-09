@@ -33,17 +33,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_', targetEntity: UserGroup::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: '`user`', targetEntity: UserGroup::class, orphanRemoval: true)]
     private Collection $userGroups;
+
+    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'user_group')]
+    private Collection $groups;
 
     #[ORM\OneToMany(mappedBy: 'agent', targetEntity: Inquiry::class)]
     private Collection $inquiries;
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
 
     public function __construct(
         )
     {
         $this->userGroups = new ArrayCollection();
+        $this->groups = new ArrayCollection();
         $this->inquiries = new ArrayCollection();
     }
 
@@ -190,6 +199,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($userGroup->getUser() === $this) {
                 $userGroup->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): static
+    {
+        if (! $this->groups->contains($group)) {
+            $userGroup = UserGroup::create($this,$group);
+            $this->userGroups->add($userGroup);
+            $group->addUserGroup($userGroup);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): static
+    {
+        if ($this->groups->removeElement($group)) {
+            // set the owning side to null (unless already changed)
+            if ($group->users->contains($this)) {
+                $group->removeUser($this);
             }
         }
 

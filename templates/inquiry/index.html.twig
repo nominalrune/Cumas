@@ -9,11 +9,11 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>VategoryId</th>
-                <th>ContactId</th>
+                <th>Category</th>
+                <th>Contact</th>
                 <th>Status</th>
-                <th>DepartmentId</th>
-                <th>AgentId</th>
+                <th>Department</th>
+                <th>Agent</th>
                 <th>Notes</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
@@ -24,11 +24,11 @@
         {% for inquiry in inquiries %}
             <tr>
                 <td>{{ inquiry.id }}</td>
-                <td>{{ inquiry.vategoryId }}</td>
-                <td>{{ inquiry.contactId }}</td>
+                <td>{{ inquiry.category }}</td>
+                <td>{{ inquiry.contact }}</td>
                 <td>{{ inquiry.status }}</td>
-                <td>{{ inquiry.departmentId }}</td>
-                <td>{{ inquiry.agentId }}</td>
+                <td>{{ inquiry.department }}</td>
+                <td>{{ inquiry.agent }}</td>
                 <td>{{ inquiry.notes }}</td>
                 <td>{{ inquiry.createdAt ? inquiry.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ inquiry.updatedAt ? inquiry.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

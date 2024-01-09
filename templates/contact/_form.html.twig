@@ -1,4 +1,8 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
+    {# {{ form_row(form.name) }}
+    {{ form_row(form.notes) }}
+    {{ include('entity_input_base.html.twig', {'item_name': 'emails'}) }}
+    {{ include('entity_input_base.html.twig', {'item_name': 'phones'}) }} #}
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

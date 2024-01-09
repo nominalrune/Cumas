@@ -44,6 +44,11 @@ class Category
     #[Groups(['category:list', 'category:item'])]
     private Collection $categories;
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+    
     public function __construct()
     {
         $this->categories = new ArrayCollection();

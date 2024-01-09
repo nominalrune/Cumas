@@ -21,11 +21,11 @@
             </tr>
             <tr>
                 <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.roles ? user.roles|join : '' }}</td>
             </tr>
             <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
+                <th>Groups</th>
+                <td>{{ user.groups ? user.groups|join : '' }}</td>
             </tr>
         </tbody>
     </table>

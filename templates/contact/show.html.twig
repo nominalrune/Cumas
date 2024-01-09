@@ -19,6 +19,14 @@
                 <th>Notes</th>
                 <td>{{ contact.notes }}</td>
             </tr>
+            <tr>
+                <th>Emails</th>
+                <td>{{ contact.emails|map(i=>i.email)|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Phones</th>
+                <td>{{ contact.phones|map(i=>i.phone)|join(', ') }}</td>
+            </tr>
         </tbody>
     </table>
 

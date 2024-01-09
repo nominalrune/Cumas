@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class ContactEmailType extends AbstractType
+class ContactPhoneType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
@@ -18,6 +18,7 @@ class ContactEmailType extends AbstractType
             ->add('contact', EntityType::class, [
                 'class' => Contact::class,
                 'choice_label' => 'name',
+                'required' => false,
             ])
             ->add('phone')
             ->add('notes', TextareaType::class, [

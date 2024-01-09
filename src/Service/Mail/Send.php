@@ -59,9 +59,9 @@ class Send
 		$mailer = new PHPMailer();
 		$mailer->isSMTP();
 		// $mailer->SMTPDebug = SMTP::DEBUG_CONNECTION;
-		$mailer->Host = $account->getHost();
+		$mailer->Host = $account->getSMTPServer();
 		//Set the SMTP port number - likely to be 25, 465 or 587
-		$mailer->Port = $account->getPort();
+		$mailer->Port = $account->getSMTPPort();
 
 		$mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 		$mailer->SMTPAuth = true;

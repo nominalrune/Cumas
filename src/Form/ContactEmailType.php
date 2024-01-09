@@ -18,6 +18,7 @@ class ContactEmailType extends AbstractType
             ->add('contact', EntityType::class, [
                 'class' => Contact::class,
                 'choice_label' => 'name',
+                'required' => false,
             ])
             ->add('email')
             ->add('notes', TextareaType::class, [

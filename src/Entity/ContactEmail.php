@@ -23,9 +23,14 @@ class ContactEmail
     #[ORM\Column(type: Types::TEXT)]
     private ?string $notes = null;
 
-    #[ORM\ManyToOne(inversedBy: 'emails')]
+    #[ORM\ManyToOne(inversedBy: 'emails',cascade:['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Contact $contact = null;
+    
+    public function __toString(): string
+    {
+        return $this->getEmail();
+    }
     
     public function __construct()
     {

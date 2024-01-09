@@ -25,28 +25,38 @@ class Group
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'groups')]
+    #[ORM\JoinTable(name: 'user_group')]
+    private Collection $users;
+    
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'groups')]
     private ?self $parent = null;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $groups;
 
-    #[ORM\OneToMany(mappedBy: 'group_', targetEntity: UserGroup::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: '`group`', targetEntity: UserGroup::class, orphanRemoval: true)]
     private Collection $userGroups;
 
-    #[ORM\OneToMany(mappedBy: 'group_', targetEntity: MailAccount::class)]
+    #[ORM\OneToMany(mappedBy: '`group`', targetEntity: MailAccount::class)]
     private Collection $mailAccounts;
 
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Inquiry::class)]
     private Collection $inquiries;
 
-    #[ORM\OneToMany(mappedBy: 'group_', targetEntity: Category::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: '`group`', targetEntity: Category::class, orphanRemoval: true)]
     private Collection $categories;
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+    
     public function __construct(
     ) {
         $this->groups = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->mailAccounts = new ArrayCollection();
         $this->inquiries = new ArrayCollection();
         $this->categories = new ArrayCollection();
@@ -169,9 +179,8 @@ class Group
 
     public function addUserGroup(UserGroup $userGroup) : static
     {
-        if (! $this->userGroups->contains($userGroup)) {
+        if ($userGroup->getGroup()->getId() === $this->id && ! $this->userGroups->contains($userGroup)) {
             $this->userGroups->add($userGroup);
-            $userGroup->setGroup($this);
         }
 
         return $this;
@@ -191,7 +200,7 @@ class Group
 
     public function getUsers() : Collection
     {
-        return $this->userGroups->map(fn (UserGroup $userGroup) => $userGroup->getUser());
+        return $this->users;
     }
 
     public function addUser(User $user) : static
@@ -199,7 +208,7 @@ class Group
         if (! $this->getUsers()->contains($user)) {
             $userGroup = UserGroup::create($user, $this);
             $this->userGroups->add($userGroup);
-            $userGroup->setGroup($this);
+            $user->addUserGroup($userGroup);
         }
 
         return $this;

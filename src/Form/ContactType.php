@@ -3,12 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Contact;
-use App\Entity\ContactEmail;
-use App\Entity\ContactPhone;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ContactType extends AbstractType
 {
@@ -17,12 +14,20 @@ class ContactType extends AbstractType
         $builder
             ->add('name')
             ->add('notes')
-            ->add('emails', ContactEmailType::class, [
-                'required' => false,
-            ])
-            ->add('phones', EntityType::class, [
-                'required' => false,
-            ])
+            ->add('emails', EntityCollectionType::class,
+                [
+                    'entry_type' => ContactEmailType::class,
+                    'entry_options' => ['label' => true],
+                    'allow_add' => true,
+                    'allow_delete' => true
+                ])
+            ->add('phones', EntityCollectionType::class,
+                [
+                    'entry_type' => ContactPhoneType::class,
+                    'entry_options' => ['label' => true],
+                    'allow_add' => true,
+                    'allow_delete' => true
+                ])
         ;
     }
 

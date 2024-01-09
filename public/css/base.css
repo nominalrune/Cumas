@@ -25,8 +25,17 @@ a{
 }
 table,thead,tbody,tr,td,th{
 	border-style: none;
+	border-collapse: collapse;
 }
-:is(td,th)::before {
+tr,th,td{
+	border-style: solid;
+	border-color: #00000020;
+	border-width: 2px;
+}
+tr:odd{
+	background-color: #00000020;
+}
+/* :is(td,th)::before {
 	border-style: solid;
 	border-color: #00000020;
 	border-width: 2px;
@@ -35,7 +44,7 @@ table,thead,tbody,tr,td,th{
 	width: calc(100% - 2px);
 	height: calc(100% - 2px);
 	position: absolute;
-}
+} */
 table {
 	border-collapse: collapse;
 }

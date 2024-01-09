@@ -1,0 +1,32 @@
+{{ form_label(form[item_name]) }}<button type="button" class="add_item_link" data-collection-holder-class="{{ item_name }}">Add</button>
+<ul class="{{ item_name }}"
+	data-index="{{form[item_name]|length > 0 ? form[item_name] |last.vars.name + 1 : 0}}"
+	data-prototype="{{form_widget(form[item_name].vars.prototype)|e('html_attr')}}"
+>
+	<li></li>
+</ul>
+
+<style>.{{ item_name }}{display:flex;gap:1em;overflow-x:auto;}.{{ item_name }}>li{display:block;}</style>
+
+<script>
+window.addFormToCollection??=(e)=> {
+		const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+		const item = document.createElement('li');
+		item.innerHTML = collectionHolder
+			.dataset
+			.prototype
+			.replace(
+			/__name__/g,
+			collectionHolder.dataset.index
+			);
+		collectionHolder.appendChild(item);
+		collectionHolder.dataset.index++;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+	document
+		.querySelectorAll('.add_item_link')
+		.forEach(btn => {
+			btn.addEventListener("click", window.addFormToCollection)
+		});
+})
+</script>

@@ -1,9 +1,13 @@
 <?php
 namespace App\Command;
 
+use App\Entity\MailAccount;
 use App\Repository\ContactEmailRepository;
 use App\Repository\InquiryRepository;
 use App\Repository\MessageRepository;
+use App\Repository\UserRepository;
+use App\Service\Log\Logger;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,12 +25,13 @@ use App\Service\String\Crypt;
 class CheckNewMailsCommand extends Command
 {
     public function __construct(
-        private ContactEmailRepository $contactEmailRepo,
-        private ContactRepository $contactRepo,
-        private InquiryRepository $inquiryRepo,
+        private EntityManagerInterface $em,
         private MessageRepository $messageRepo,
+        private ContactEmailRepository $contactEmailRepo,
+        private UserRepository $userRepo,
         private Receive $receiver,
         private Crypt $crypt,
+        private Logger $logger,
     ) {
         parent::__construct('app:check-mails');
     }
@@ -34,54 +39,110 @@ class CheckNewMailsCommand extends Command
         InputInterface $input,
         OutputInterface $output
     ) : int {
-        $mails = $this->receiver->receiveAll();
-        // 送信者の連絡先が登録されていなかったら作る
-        foreach ($mails as $mail) {
-            $contactEmail = $this->contactEmailRepo->findOneBy(['email' => $this->crypt->encrypt($mail->from)]);
-            if (! $contactEmail) {
-                $contact = new Contact();
-                $contact->setName($mail->from);
-                $this->contactRepo->save($contact);
-                $contactEmail = new ContactEmail();
-                $contactEmail->setEmail($mail->from);
-                $contactEmail->setContact($contact);
-                $this->contactEmailRepo->save($contactEmail);
+        $this->logger->log("check email start.");
+        $tuples = $this->receiver->receiveAll();
+
+        foreach ($tuples as $tuple) {
+            foreach ($tuple['mails'] as $mail) {
+                $this->enrollMail($mail, $tuple['account']);
             }
-            $contact = $contactEmail->getContact();
-            $inquiry = $this->messageRepo->findOneBy(['message_id' => $mail->references])?->getInquiry();
-            if (! $inquiry) {
-                $date = new \DateTimeImmutable();
-                $inquiry = new Inquiry();
-                $inquiry->setContactId($contact->id);
-                $inquiry->setTitle($mail->subject);
-                $inquiry->setCreatedAt($date);
-                $inquiry->setUpdatedAt($date);
-                $this->inquiryRepo->save($inquiry);
-            }
-            $file = $this->receiver->save($mail->uid . ".msg", $mail->body);
-            $message = new Message();
-            $message->setSenderType(0);
-            $message->setSubject($mail->subject);
-            $message->setInquiry($inquiry);
-            $message->setMail($contactEmail);
-            $message->setFile($file);
-            $message->setMessageId($mail->message_id);
-            $message->setReferenceId($mail->references);
-            $this->messageRepo->save($message);
         }
-        // this method must return an integer number with the "exit status code"
-        // of the command. You can also use these constants to make code more readable
+        
+        $this->logger->log("check email end.");
 
         // return this if there was no problem running the command
         // (it's equivalent to returning int(0))
         return Command::SUCCESS;
-
-        // or return this if some error happened during the execution
+        // or return this if some error happened during the executio
         // (it's equivalent to returning int(1))
         // return Command::FAILURE;
-
         // or return this to indicate incorrect command usage; e.g. invalid options
         // or missing arguments (it's equivalent to returning int(2))
         // return Command::INVALID
+
+    }
+
+    private function enrollMail($mail, MailAccount $account)
+    {
+        $from = \mailparse_rfc822_parse_addresses($mail->from)[0];
+        $contactEmail = $this->contactEmailRepo->findOneBy(['email' => $this->crypt->encrypt($from["address"])]);
+        
+        // 送信者の連絡先が登録されていなかったら作る
+        if (! isset($contactEmail)) {
+            $contactEmail = $this->createContactEmail($from);
+        }
+        $contact = $contactEmail->getContact();
+        if(! isset($contact)){
+            throw new \Exception("contact not found.");
+        }
+        $inquiry = $this->getOrCreateInquiry($mail, $contact, $account);
+        
+        $filePath = $this->receiver->save('mails/' . $mail->message_id . ".msg", $mail->file);
+        $this->logger->log("new mail saved: {$filePath}");
+
+        $message = $this->createMessage($mail, $contactEmail, $inquiry, $filePath);
+    }
+    
+    private function createMessage($mail, ContactEmail $contactEmail, Inquiry $inquiry, string $filePath)
+    {
+        echo "creating message: subject: {$mail->subject}, inquiry:".json_encode($inquiry), PHP_EOL;
+        $message = new Message();
+        $message->setSenderType(0);
+        $message->setSubject($mail->subject);
+        $message->setInquiry($inquiry);
+        $message->setMail($contactEmail);
+        $message->setFile($filePath);
+        $message->setMessageId($mail->message_id);
+        $message->setReferenceId(property_exists($mail, 'references') ? $mail->references : '');
+        $this->em->persist($message);
+        $this->em->flush();
+        $this->logger->log("new message: {$message->getMessageId()}");
+        return $message;
+    }
+    /**
+     * @param array{display?:string,address:string} $from
+     */
+    private function createContactEmail(array $from){
+        $contact = new Contact();
+        $name = $from['display'] ?? $from['address'];
+        $contact->setName($name);
+        $contact->setNotes('');
+        $this->em->persist($contact);
+        $this->em->flush();
+        echo "created contact: name: {$name}", PHP_EOL;
+
+        $contactEmail = new ContactEmail();
+        $contactEmail->setNotes('');
+        $contactEmail->setEmail($from['address']);
+        $contactEmail->setContact($contact);
+        $this->em->persist($contactEmail);
+
+        $this->em->flush();
+        $this->logger->log("new contact email: {$contactEmail->getEmail()}");
+        return $contactEmail;
+    }
+    
+    private function getOrCreateInquiry($mail, Contact $contact, MailAccount $account){
+        if (property_exists($mail, 'references')) {
+            $inquiry = $this->messageRepo->findOneBy(['message_id' => $mail->references])?->getInquiry();
+            echo "inquiry found by references: {$inquiry->getId()}", PHP_EOL;
+        }
+        if (! isset($inquiry)) {
+            echo "inquiry not found by references. creating new one: contactId:{$contact->getId()}", PHP_EOL;
+            $date = new \DateTimeImmutable();
+            $inquiry = new Inquiry();
+            $inquiry->setContact($contact);
+            $inquiry->setTitle($mail->subject);
+            $inquiry->setStatus('open');
+            $inquiry->setNotes('');
+            $inquiry->setDepartment($account->getGroup());
+            $inquiry->setCreatedAt($date);
+            $inquiry->setUpdatedAt($date);
+            
+            $this->em->persist($inquiry);
+            $this->em->flush();
+        }
+        echo "inquiry created: {$inquiry->getId()}", PHP_EOL;
+        return $inquiry;
     }
 }

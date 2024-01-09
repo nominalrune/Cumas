@@ -1,0 +1,52 @@
+{% extends "form_div_layout.html.twig" %}
+
+{% block entity_collection_widget -%}
+    {# {% if prototype is defined and not prototype.rendered %}
+        {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+    {% endif %}
+    {{- block('form_widget') -}} #}
+    {{ form_label(form) }}<button type="button" class="add_item_link" data-collection-holder-class="{{ name }}">Add</button>
+    <ul class="{{ name }}"
+        data-index="{{form|length > 0 ? form|length + 1 : 0}}"
+        data-prototype="{{form_widget(form.vars.prototype)|e('html_attr')}}"
+    >
+        {% for item in form %}
+            <li>{{ form_widget(item) }}</li>
+        {% endfor %}
+    </ul>
+
+    <style>.{{ name }}{display:flex;gap:1em;overflow-x:auto;}.{{ name }}>li{display:block;}</style>
+
+    <script>
+    window.addFormToCollection??=(e)=> {
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+            const box =  document.createElement('li');
+            box.style.display = 'flex';
+            const item = document.createElement('div');
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', (e) => {
+                e.currentTarget.closest('li').remove();
+            });
+            item.innerHTML = collectionHolder
+                .dataset
+                .prototype
+                .replace(
+                /__name__/g,
+                collectionHolder.dataset.index
+                );
+            collectionHolder.appendChild(box)
+            box.appendChild(item);
+            box.appendChild(deleteButton);
+            collectionHolder.dataset.index++;
+    }
+    document.addEventListener('DOMContentLoaded',()=>{
+        document
+            .querySelectorAll('.add_item_link')
+            .forEach(btn => {
+                btn.addEventListener("click", window.addFormToCollection)
+            });
+    })
+    </script>
+{%- endblock entity_collection_widget %}

@@ -43,6 +43,10 @@ class MailAccount
     #[ORM\JoinColumn(nullable: false)]
     private ?Group $group_ = null;
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
     public function __construct(
     ) {
     }
