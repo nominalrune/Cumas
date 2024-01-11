@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use eXorus\PhpMimeMailParser\Parser;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
@@ -15,10 +16,10 @@ class Message
 
     #[ORM\Column]
     private ?int $sender_type = null;
-    
+
     #[ORM\Column(length: 511)]
     private ?string $file = null;
-    
+
     #[ORM\Column(length: 511)]
     private ?string $messageId = null;
 
@@ -38,11 +39,16 @@ class Message
     #[ORM\ManyToOne]
     private ?ContactPhone $phone = null;
 
-    public function __construct(
-        )
+    public function __toString() : string
     {
+        return $this->getSubject();
+
     }
-    
+
+    public function __construct(
+    ) {
+    }
+
     public static function create(
         Inquiry $inquiry,
         ?ContactEmail $mail,
@@ -52,8 +58,7 @@ class Message
         string $file,
         string $messageId,
         string $referenceId
-        ): self
-    {
+    ) : self {
         $message = new self();
         $message->setInquiry($inquiry);
         $message->setMail($mail);
@@ -66,7 +71,7 @@ class Message
 
         return $message;
     }
-    
+
     public function update(
         ?Inquiry $inquiry,
         ?ContactEmail $mail,
@@ -75,134 +80,147 @@ class Message
         ?int $sender_type,
         ?string $file,
         ?string $messageId,
-        ?string $referenceId): self
+        ?string $referenceId) : self
     {
-        if($inquiry !== null){
+        if ($inquiry !== null) {
             $this->setInquiry($inquiry);
         }
-        if($mail !== null){
+        if ($mail !== null) {
             $this->setMail($mail);
         }
-        if($phone !== null){
+        if ($phone !== null) {
             $this->setPhone($phone);
         }
-        if($subject !== null){
+        if ($subject !== null) {
             $this->setSubject($subject);
         }
-        if($sender_type !== null){
+        if ($sender_type !== null) {
             $this->setSenderType($sender_type);
         }
-        if($file !== null){
+        if ($file !== null) {
             $this->setFile($file);
         }
-        if($messageId !== null){
+        if ($messageId !== null) {
             $this->setMessageId($messageId);
         }
-        if($referenceId !== null){
+        if ($referenceId !== null) {
             $this->setReferenceId($referenceId);
         }
 
         return $this;
     }
-    
-    public function getId(): ?int
+
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    public function getSenderType(): ?int
+    public function getSenderType() : ?int
     {
         return $this->sender_type;
     }
-    
-    public function setSenderType(int $sender_type): static
+
+    public function setSenderType(int $sender_type) : static
     {
         $this->sender_type = $sender_type;
 
         return $this;
     }
-    
-    public function getFile(): ?string
+
+    public function getFile() : ?string
     {
         return $this->file;
     }
 
-    public function setFile(string $file): static
+    public function setFile(string $file) : static
     {
         $this->file = $file;
 
         return $this;
     }
-    
-    public function getMessageId(): ?string
+
+    public function getMessageId() : ?string
     {
         return $this->messageId;
     }
 
-    public function setMessageId(string $messageId): static
+    public function setMessageId(string $messageId) : static
     {
         $this->messageId = $messageId;
 
         return $this;
     }
 
-    public function getReferenceId(): ?string
+    public function getReferenceId() : ?string
     {
         return $this->referenceId;
     }
 
-    public function setReferenceId(?string $referenceId): static
+    public function setReferenceId(?string $referenceId) : static
     {
         $this->referenceId = $referenceId;
 
         return $this;
     }
 
-    public function getSubject(): ?string
+    public function getSubject() : ?string
     {
         return $this->subject;
     }
 
-    public function setSubject(string $subject): static
+    public function setSubject(string $subject) : static
     {
         $this->subject = $subject;
 
         return $this;
     }
 
-    public function getInquiry(): ?Inquiry
+    public function getInquiry() : ?Inquiry
     {
         return $this->inquiry;
     }
 
-    public function setInquiry(?Inquiry $inquiry): static
+    public function setInquiry(?Inquiry $inquiry) : static
     {
         $this->inquiry = $inquiry;
 
         return $this;
     }
 
-    public function getMail(): ?ContactEmail
+    public function getMail() : ?ContactEmail
     {
         return $this->mail;
     }
 
-    public function setMail(?ContactEmail $mail): static
+    public function setMail(?ContactEmail $mail) : static
     {
         $this->mail = $mail;
 
         return $this;
     }
 
-    public function getPhone(): ?ContactPhone
+    public function getPhone() : ?ContactPhone
     {
         return $this->phone;
     }
 
-    public function setPhone(?ContactPhone $phone): static
+    public function setPhone(?ContactPhone $phone) : static
     {
         $this->phone = $phone;
 
         return $this;
+    }
+    public function getBody()
+    {
+        $filepath = "/var/www/html/" . $this->getFile();
+        if (! isset($filepath)) {
+            return '';
+        }
+        $file = file_get_contents($filepath);
+        
+        $parser = new Parser();
+        $parser->setText($file);
+        $mail = $parser->getMessageBody('text');
+        return print_r($mail, true) . "\n";
     }
 }

@@ -27,6 +27,10 @@
                 <th>Subject</th>
                 <td>{{ message.subject }}</td>
             </tr>
+            <tr>
+                <th>Message</th>
+                <td><pre>{{ message.getBody() }}</pre></td>
+            </tr>
         </tbody>
     </table>
 

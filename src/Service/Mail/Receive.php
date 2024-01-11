@@ -7,6 +7,7 @@ use App\Entity\MailAccount;
 use App\Service\File\Save;
 use App\Service\Log\Logger;
 use Doctrine\ORM\EntityManagerInterface;
+use eXorus\PhpMimeMailParser\Parser;
 
 class Receive
 {
@@ -75,6 +76,10 @@ class Receive
             $mailFile = $this->fetchWholeMail($overview->uid, $inbox);
             $overview->file = $mailFile;
             $overview->message_id = str_replace(["<", ">"], "", $overview->message_id);
+            $overview->reference_id = str_replace(["<", ">"], "", $overview->reference_id);
+            $parser = new Parser();
+            $parser->setText($mailFile);
+            $overview->subject = (string)$parser->getHeader('subject');
         }
         \imap_close($inbox);
         echo "[" . date("Y-m-d h:i:s") . "] " . "closed inbox.", PHP_EOL;

@@ -5,8 +5,13 @@ namespace App\Service\Log;
 class Logger
 {
 	private string $logDir = "./log";
-	private string $path = $this->logDir . "/" . date("Y-m-d") . ".log";
-	private string $time = "[" . date("Y-m-d h:i:s") . "] ";
+	private string $path;
+	private string $time;
+	public function __construct()
+	{
+		$this->path = $this->logDir . "/" . date("Y-m-d") . ".log";
+		$this->time = "[" . date("Y-m-d h:i:s") . "] ";
+	}
 	private function save(string $message) : void
 	{
 		if (! file_exists($this->logDir)) {

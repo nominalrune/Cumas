@@ -1,3 +1,4 @@
+mails/*
 
 ###> symfony/framework-bundle ###
 /.env.local

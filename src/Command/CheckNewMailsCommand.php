@@ -16,7 +16,6 @@ use App\Entity\Message;
 use App\Entity\Inquiry;
 use App\Entity\Contact;
 use App\Entity\ContactEmail;
-use App\Repository\ContactRepository;
 use App\Service\String\Crypt;
 
 // the name of the command is what users type after "php bin/console"
