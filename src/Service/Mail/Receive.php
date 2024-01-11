@@ -5,30 +5,39 @@ namespace App\Service\Mail;
 use App\Repository\MailAccountRepository;
 use App\Entity\MailAccount;
 use App\Service\File\Save;
+use App\Service\Log\Logger;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Receive
 {
     use Save;
     public function __construct(
-        private MailAccountRepository $repo
+        private MailAccountRepository $repo,
+        private Logger $logger,
+        private EntityManagerInterface $em,
     ) {
     }
     /**
+     * check new mails with all active-marked mail accounts
      * @return array{account:MailAccount,mails:object{subject:string,from:string,to:string,date:string,message_id:string,references:string,in_reply_to:string,size:string,uid:string,msgno:string,recent:string,flagged:string,answered:string,deleted:string,seen:string,draft:string,udate:string}[]} - received mails
      */
     public function receiveAll()
     {
-        echo "[" . date("Y-m-d h:i:s") . "] " . 'fetxhing accounts...', PHP_EOL;
         $accounts = $this->fetchAccounts();
-        echo "[" . date("Y-m-d h:i:s") . "] " . "done. " . count($accounts) . " accounts fetched.", PHP_EOL;
         return array_map(function ($account) {
             try {
-                return ["account" => $account, "mails" => $this->fetchMails($account)];
+                $mails = $this->fetchMails($account);
+                $account->setLastCheckedAt(new \DateTimeImmutable());
+                $this->em->persist($account);
+                $this->em->flush();
+                
+                return ["account" => $account, "mails" => $mails];
             } catch (\Exception $e) {
-                echo $e->getMessage();
+                $this->logger->error($e);
             }
         }, $accounts);
     }
+    
     private function fetchAccounts()
     {
         $accounts = $this->repo->findBy(['active' => true]);

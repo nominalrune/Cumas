@@ -7,13 +7,23 @@ use App\Entity\MailAccount;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Service\String\Crypt;
 use Symfony\Component\Config\Resource\FileResource;
+use App\Service\Log\Logger;
+use Doctrine\ORM\EntityManagerInterface;
+
+/**
+ */
 class Send
 {
 	public function __construct(
 		private MailAccountRepository $repo,
 		private Crypt $crypt,
+		private Logger $logger,
+		private EntityManagerInterface $em,
 	) {
 	}
+	/**
+	 * @throws \Exception if no account found
+	 */
 	private function fetchAccount(string $sender) : MailAccount
 	{
 		$account = $this->repo->findOneBy(
@@ -25,28 +35,47 @@ class Send
 		return $account;
 	}
 	/**
-	 * @param FileResource[] $attachments attachments
+	 * send a mail. 
+	 * @param string $sender sender
+	 * @param string $to to
+	 * @param string $subject subject
+	 * @param string $message message, which can be html or plain text
+	 * @param ?string $plainMessage plain text message
+	 * @param ?string[] $attachments paths of attachments
+	 * @param ?array{string,string} $additional_headers
+	 * @param ?string $additional_params
+	 * @return string sent message, which includes complete headers and body.
 	 */
 	public function send(
 		string $sender,
-		string $to,
+		string $to, // TODO 名前指定できるようにする？
 		string $subject,
-		string $message = null,
+		string $message,
+		?string $plainMessage = null,
 		array $attachments = null,
 		string $additional_headers = "",
 		string $additional_params = null
-	) : string {$account = $this->fetchAccount($sender);
+	) : string {
+		$account = $this->fetchAccount($sender);
 		$mailer = $this->setUp($account);
 		$mailer->addAddress($to);
 		$mailer->Subject = $subject;
 		$mailer->msgHTML($message); // TODO imageのinline化を活用したい
-		// $mailer->Body = $plainMessage;
-		//Attach an image file
-		foreach ($attachments as $attachment){
-			$mailer->addAttachment($attachment->getResource());
+		if(isset($plainMessage)){
+			$mailer->Body = $plainMessage;
+		}
+		if(isset($additional_headers)){
+			foreach($additional_headers as $key => $value){
+				$mailer->addCustomHeader($key, $value);
+			}
+		}
+		// Attach files
+		foreach ($attachments as $attachment) {
+			$path = $attachment;
+			$mailer->addAttachment($path, pathinfo($path,PATHINFO_FILENAME));
 		}
 		// $mailer->preSend();
-		//send the message, check for errors
+		// send the message, check for errors
 		if (! $mailer->send()) {
 			throw new \Exception('Mailer Error: ' . $mailer->ErrorInfo);
 		} else {

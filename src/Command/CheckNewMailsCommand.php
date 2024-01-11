@@ -3,7 +3,6 @@ namespace App\Command;
 
 use App\Entity\MailAccount;
 use App\Repository\ContactEmailRepository;
-use App\Repository\InquiryRepository;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use App\Service\Log\Logger;
@@ -87,13 +86,13 @@ class CheckNewMailsCommand extends Command
     {
         echo "creating message: subject: {$mail->subject}, inquiry:".json_encode($inquiry), PHP_EOL;
         $message = new Message();
-        $message->setSenderType(0);
-        $message->setSubject($mail->subject);
-        $message->setInquiry($inquiry);
-        $message->setMail($contactEmail);
-        $message->setFile($filePath);
-        $message->setMessageId($mail->message_id);
-        $message->setReferenceId(property_exists($mail, 'references') ? $mail->references : '');
+        $message->setSenderType(0)
+            ->setSubject($mail->subject)
+            ->setInquiry($inquiry)
+            ->setMail($contactEmail)
+            ->setFile($filePath)
+            ->setMessageId($mail->message_id)
+            ->setReferenceId(property_exists($mail, 'references') ? $mail->references : '');
         $this->em->persist($message);
         $this->em->flush();
         $this->logger->log("new message: {$message->getMessageId()}");
@@ -109,12 +108,12 @@ class CheckNewMailsCommand extends Command
         $contact->setNotes('');
         $this->em->persist($contact);
         $this->em->flush();
-        echo "created contact: name: {$name}", PHP_EOL;
+        echo "created contact. name: {$name}", PHP_EOL;
 
         $contactEmail = new ContactEmail();
-        $contactEmail->setNotes('');
-        $contactEmail->setEmail($from['address']);
-        $contactEmail->setContact($contact);
+        $contactEmail->setNotes('')
+            ->setEmail($from['address'])
+            ->setContact($contact);
         $this->em->persist($contactEmail);
 
         $this->em->flush();
@@ -131,13 +130,13 @@ class CheckNewMailsCommand extends Command
             echo "inquiry not found by references. creating new one: contactId:{$contact->getId()}", PHP_EOL;
             $date = new \DateTimeImmutable();
             $inquiry = new Inquiry();
-            $inquiry->setContact($contact);
-            $inquiry->setTitle($mail->subject);
-            $inquiry->setStatus('open');
-            $inquiry->setNotes('');
-            $inquiry->setDepartment($account->getGroup());
-            $inquiry->setCreatedAt($date);
-            $inquiry->setUpdatedAt($date);
+            $inquiry->setContact($contact)
+                ->setTitle($mail->subject)
+                ->setStatus('open')
+                ->setNotes('')
+                ->setDepartment($account->getGroup())
+                ->setCreatedAt($date)
+                ->setUpdatedAt($date);
             
             $this->em->persist($inquiry);
             $this->em->flush();
