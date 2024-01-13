@@ -26,7 +26,7 @@ class Group
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'groups')]
-    #[ORM\JoinTable(name: 'user_group')]
+    #[ORM\JoinTable(name: '`user_group`')]
     private Collection $users;
     
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'groups')]

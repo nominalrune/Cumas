@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $userGroups;
 
     #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
-    #[ORM\JoinTable(name: 'user_group')]
+    #[ORM\JoinTable(name: '`user_group`')]
     private Collection $groups;
 
     #[ORM\OneToMany(mappedBy: 'agent', targetEntity: Inquiry::class)]

@@ -3,9 +3,9 @@
 {% block title %}Inquiry{% endblock %}
 
 {% block body %}
-    <h1>Inquiry</h1>
+<h1>Inquiry</h1>
 
-        <div style="display:grid;grid-auto-flow:column;">
+<div style="display:grid;grid-auto-flow:column;">
     <table class="table">
         <tbody>
             <tr>
@@ -54,14 +54,16 @@
         </thead>
         <tbody>
             <tr>
-                <td><pre>{{ inquiry.messages|join(', ') }}</pre></td>
+                <td>
+                    <pre></pre>
+                </td>
             </tr>
         </tbody>
     </table>
 </div>
-    <a href="{{ path('app_inquiry_index') }}">back to list</a>
+<a href="{{ path('app_inquiry_index') }}">back to list</a>
 
-    <a href="{{ path('app_inquiry_edit', {'id': inquiry.id}) }}">edit</a>
+<a href="{{ path('app_inquiry_edit', {'id': inquiry.id}) }}">edit</a>
 
-    {{ include('inquiry/_delete_form.html.twig') }}
+{{ include('inquiry/_delete_form.html.twig') }}
 {% endblock %}

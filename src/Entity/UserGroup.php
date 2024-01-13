@@ -6,6 +6,7 @@ use App\Repository\UserGroupRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserGroupRepository::class)]
+#[ORM\Table(name: '`user_group`')]
 class UserGroup
 {
     #[ORM\Id]
@@ -15,11 +16,11 @@ class UserGroup
 
     #[ORM\ManyToOne(inversedBy: 'userGroups')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_ = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'userGroups')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Group $group_ = null;
+    private ?Group $group = null;
 
     public function __construct(
         )
@@ -45,24 +46,24 @@ class UserGroup
 
     public function getGroup(): ?Group
     {
-        return $this->group_;
+        return $this->group;
     }
 
-    public function setGroup(?Group $group_): static
+    public function setGroup(?Group $group): static
     {
-        $this->group_ = $group_;
+        $this->group = $group;
 
         return $this;
     }
 
     public function getUser(): ?User
     {
-        return $this->user_;
+        return $this->user;
     }
 
-    public function setUser(?User $user_): static
+    public function setUser(?User $user): static
     {
-        $this->user_ = $user_;
+        $this->user = $user;
 
         return $this;
     }
