@@ -26,16 +26,12 @@ class Contact
     #[ORM\Column(type: Types::TEXT)]
     private ?string $notes = null;
 
-    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactEmail::class, cascade: ['persist', 'remove'])]
-    private Collection $emails;
-
-    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactPhone::class, cascade: ['persist', 'remove'])]
-    private Collection $phones;
+    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactItem::class, cascade: ['persist', 'remove'])]
+    private Collection $items;
 
     public function __construct()
     {
-        $this->emails = new ArrayCollection();
-        $this->phones = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
     
     public static function create(string $name, string $notes): self
@@ -89,62 +85,33 @@ class Contact
     }
 
     /**
-     * @return Collection<int, ContactEmail>
+     * @return Collection<int, ContactItem>
      */
-    public function getEmails(): Collection
+    public function getItems(): Collection
     {
-        return $this->emails;
+        return $this->items;
     }
 
-    public function addEmail(ContactEmail $email): static
+    public function addItem(ContactItem $item): static
     {
-        if (!$this->emails->contains($email)) {
-            $this->emails->add($email);
-            $email->setContact($this);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setContact($this);
         }
 
         return $this;
     }
 
-    public function removeEmail(ContactEmail $email): static
+    public function removeItem(ContactItem $item): static
     {
-        if ($this->emails->removeElement($email)) {
+        if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
-            if ($email->getContact() === $this) {
-                $email->setContact(null);
+            if ($item->getContact() === $this) {
+                $item->setContact(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, ContactPhone>
-     */
-    public function getPhones(): Collection
-    {
-        return $this->phones;
-    }
-
-    public function addPhone(ContactPhone $phone): static
-    {
-        if (!$this->phones->contains($phone)) {
-            $this->phones->add($phone);
-            $phone->setContact($this);
-        }
-
-        return $this;
-    }
-
-    public function removePhone(ContactPhone $phone): static
-    {
-        if ($this->phones->removeElement($phone)) {
-            // set the owning side to null (unless already changed)
-            if ($phone->getContact() === $this) {
-                $phone->setContact(null);
-            }
-        }
-
-        return $this;
-    }
 }
