@@ -34,10 +34,7 @@ class Message
     private ?Inquiry $inquiry = null;
 
     #[ORM\ManyToOne]
-    private ?ContactEmail $mail = null;
-
-    #[ORM\ManyToOne]
-    private ?ContactPhone $phone = null;
+    private ?ContactItem $contact = null;
 
     public function __toString() : string
     {
@@ -51,8 +48,7 @@ class Message
 
     public static function create(
         Inquiry $inquiry,
-        ?ContactEmail $mail,
-        ?ContactPhone $phone,
+        ?ContactItem $contact,
         string $subject,
         int $sender_type,
         string $file,
@@ -61,8 +57,7 @@ class Message
     ) : self {
         $message = new self();
         $message->setInquiry($inquiry);
-        $message->setMail($mail);
-        $message->setPhone($phone);
+        $message->setContact($contact);
         $message->setSubject($subject);
         $message->setSenderType($sender_type);
         $message->setFile($file);
@@ -74,8 +69,7 @@ class Message
 
     public function update(
         ?Inquiry $inquiry,
-        ?ContactEmail $mail,
-        ?ContactPhone $phone,
+        ?ContactItem $contact,
         ?string $subject,
         ?int $sender_type,
         ?string $file,
@@ -85,11 +79,8 @@ class Message
         if ($inquiry !== null) {
             $this->setInquiry($inquiry);
         }
-        if ($mail !== null) {
-            $this->setMail($mail);
-        }
-        if ($phone !== null) {
-            $this->setPhone($phone);
+        if ($contact !== null) {
+            $this->setContact($contact);
         }
         if ($subject !== null) {
             $this->setSubject($subject);
@@ -187,29 +178,18 @@ class Message
         return $this;
     }
 
-    public function getMail() : ?ContactEmail
+    public function getContact() : ?ContactItem
     {
-        return $this->mail;
+        return $this->contact;
     }
 
-    public function setMail(?ContactEmail $mail) : static
+    public function setContact(?ContactItem $contact) : static
     {
-        $this->mail = $mail;
+        $this->contact = $contact;
 
         return $this;
     }
 
-    public function getPhone() : ?ContactPhone
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?ContactPhone $phone) : static
-    {
-        $this->phone = $phone;
-
-        return $this;
-    }
     public function getBody()
     {
         $filepath = "/var/www/html/" . $this->getFile();

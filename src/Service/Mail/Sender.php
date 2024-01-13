@@ -6,13 +6,12 @@ use App\Repository\MailAccountRepository;
 use App\Entity\MailAccount;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Service\String\Crypt;
-use Symfony\Component\Config\Resource\FileResource;
 use App\Service\Log\Logger;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  */
-class Send
+class Sender
 {
 	public function __construct(
 		private MailAccountRepository $repo,

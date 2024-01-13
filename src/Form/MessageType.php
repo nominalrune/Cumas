@@ -2,8 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\ContactEmail;
-use App\Entity\ContactPhone;
+use App\Entity\ContactItem;
 use App\Entity\Inquiry;
 use App\Entity\Message;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,12 +23,8 @@ class MessageType extends AbstractType
                 'class' => Inquiry::class,
                 'choice_label' => 'id',
             ])
-            ->add('mail', EntityType::class, [
-                'class' => ContactEmail::class,
-                'choice_label' => 'id',
-            ])
-            ->add('phone', EntityType::class, [
-                'class' => ContactPhone::class,
+            ->add('contacts', EntityType::class, [
+                'class' => ContactItem::class,
                 'choice_label' => 'id',
             ])
         ;

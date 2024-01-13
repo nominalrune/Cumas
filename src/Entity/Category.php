@@ -34,7 +34,7 @@ class Category
     #[ORM\ManyToOne(inversedBy: 'categories')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['category:list', 'category:item'])]
-    private ?Group $group_ = null;
+    private ?Group $group = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
     #[Groups(['category:list', 'category:item'])]
@@ -98,12 +98,12 @@ class Category
 
     public function getGroup(): ?Group
     {
-        return $this->group_;
+        return $this->group;
     }
 
-    public function setGroup(?Group $group_): static
+    public function setGroup(?Group $group): static
     {
-        $this->group_ = $group_;
+        $this->group = $group;
 
         return $this;
     }

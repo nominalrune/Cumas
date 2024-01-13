@@ -4,14 +4,14 @@ namespace App\Service\Mail;
 
 use App\Repository\MailAccountRepository;
 use App\Entity\MailAccount;
-use App\Service\File\Save;
+use App\Service\File\Savable;
 use App\Service\Log\Logger;
 use Doctrine\ORM\EntityManagerInterface;
 use eXorus\PhpMimeMailParser\Parser;
 
-class Receive
+class Receiver
 {
-    use Save;
+    use Savable;
     public function __construct(
         private MailAccountRepository $repo,
         private Logger $logger,

@@ -55,61 +55,61 @@ class MailAccount
     ) {
     }
 
-    public static function create(
-        string $name,
-        string $host,
-        int $port,
-        string $username,
-        string $password,
-        bool $active,
-        Group $group,
+    // public static function create(
+    //     string $name,
+    //     string $host,
+    //     int $port,
+    //     string $username,
+    //     string $password,
+    //     bool $active,
+    //     Group $group,
 
-    ) : self {
-        $account = new self();
-        $account->setName($name);
-        $account->setHost($host);
-        $account->setPort($port);
-        $account->setUsername($username);
-        $account->setPassword($password);
-        $account->setGroup($group);
-        $account->setActive($active);
+    // ) : self {
+    //     $account = new self();
+    //     $account->setName($name);
+    //     $account->setHost($host);
+    //     $account->setPort($port);
+    //     $account->setUsername($username);
+    //     $account->setPassword($password);
+    //     $account->setGroup($group);
+    //     $account->setActive($active);
 
-        return $account;
-    }
+    //     return $account;
+    // }
 
-    public function update(
-        ?string $name,
-        ?string $host,
-        ?int $port,
-        ?string $username,
-        ?string $password,
-        ?bool $active,
-        ?Group $group, ) : self
-    {
-        if ($name !== null) {
-            $this->setName($name);
-        }
-        if ($host !== null) {
-            $this->setHost($host);
-        }
-        if ($port !== null) {
-            $this->setPort($port);
-        }
-        if ($username !== null) {
-            $this->setUsername($username);
-        }
-        if ($password !== null) {
-            $this->setPassword($password);
-        }
-        if ($active !== null) {
-            $this->setActive($active);
-        }
-        if ($group !== null) {
-            $this->setGroup($group);
-        }
+    // public function update(
+    //     ?string $name,
+    //     ?string $host,
+    //     ?int $port,
+    //     ?string $username,
+    //     ?string $password,
+    //     ?bool $active,
+    //     ?Group $group, ) : self
+    // {
+    //     if ($name !== null) {
+    //         $this->setName($name);
+    //     }
+    //     if ($host !== null) {
+    //         $this->setHost($host);
+    //     }
+    //     if ($port !== null) {
+    //         $this->setPort($port);
+    //     }
+    //     if ($username !== null) {
+    //         $this->setUsername($username);
+    //     }
+    //     if ($password !== null) {
+    //         $this->setPassword($password);
+    //     }
+    //     if ($active !== null) {
+    //         $this->setActive($active);
+    //     }
+    //     if ($group !== null) {
+    //         $this->setGroup($group);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getId() : ?int
     {

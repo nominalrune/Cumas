@@ -2,8 +2,13 @@
 
 namespace App\Service\File;
 
-trait Save
+trait Savable
 {
+	/** 
+	 * @param string $filename fullpath to file
+	 * @param string $content content to save
+	 * @return string $path
+	 */
 	public function save(string $filename, string $content) : string
 	{
 		$path = $filename;
