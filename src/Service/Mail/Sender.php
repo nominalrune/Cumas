@@ -4,6 +4,7 @@ namespace App\Service\Mail;
 
 use App\Repository\MailAccountRepository;
 use App\Entity\MailAccount;
+use App\Service\File\Savable;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Service\String\Crypt;
 use App\Service\Log\Logger;
@@ -13,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class Sender
 {
+	use Savable;
 	public function __construct(
 		private MailAccountRepository $repo,
 		private Crypt $crypt,
@@ -40,7 +42,7 @@ class Sender
 	 * @param string $subject subject
 	 * @param string $message message, which can be html or plain text
 	 * @param ?string $plainMessage plain text message
-	 * @param ?string[] $attachments paths of attachments
+	 * @param ?\Symfony\Component\HttpFoundation\File\UploadedFile[] $attachments paths of attachments
 	 * @param ?array{string,string} $additional_headers
 	 * @param ?string $additional_params
 	 * @return string sent message, which includes complete headers and body.
@@ -51,9 +53,11 @@ class Sender
 		string $subject,
 		string $message,
 		?string $plainMessage = null,
-		array $attachments = null,
-		string $additional_headers = "",
-		string $additional_params = null
+		?array $attachments = null,
+		?string $additional_headers,
+		?string $additional_params,
+		?string $referenceId,
+		?bool $save = false,
 	) : string {
 		$account = $this->fetchAccount($sender);
 		$mailer = $this->setUp($account);
@@ -70,8 +74,9 @@ class Sender
 		}
 		// Attach files
 		foreach ($attachments as $attachment) {
-			$path = $attachment;
-			$mailer->addAttachment($path, pathinfo($path,PATHINFO_FILENAME));
+			$name = $attachment->getClientOriginalName();
+			$path = $attachment->getRealPath();
+			$mailer->addAttachment($path, $name, 'base64', $attachment->getMimeType());
 		}
 		// $mailer->preSend();
 		// send the message, check for errors
@@ -79,6 +84,11 @@ class Sender
 			throw new \Exception('Mailer Error: ' . $mailer->ErrorInfo);
 		} else {
 			$message = $mailer->getSentMIMEMessage();
+			//FIXME
+			$messageId = $mailer->MessageID;
+			if($save){
+				$this->save(getenv('STORAGE_PATH').'/mail/'.$messageId.".msg" , $message);
+			}
 			return $message;
 		}
 	}

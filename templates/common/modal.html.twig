@@ -1,0 +1,23 @@
+{% set dialogId = random() %}
+
+<dialog id="dialog-{{ dialogId }}">
+    {{ content }}
+    {% if ( close )% }
+		<button id="close-{{ dialogId }}">{{ close }}</button>
+	{% endif % }
+</dialog>
+
+<script>
+    const dialog = document.getElementById('myDialog');
+    dialog.showModal();
+	const form = dislog.querySelector('form');
+	if(form) {
+		form.addEventListener('submit', function() {
+			dialog.close();
+		});
+	}
+    const closeButton = document.getElementById('closeButton');
+    closeButton.addEventListener('click', function() {
+        dialog.close();
+    });
+</script>

@@ -1,0 +1,48 @@
+{% set formId = random() %}
+
+<style>
+	.email-form {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		width: 500px;
+	}
+	.email-form label {
+		font-weight: bold;
+	}
+	.email-form input,
+	.email-form textarea {
+		width: 100%;
+	}
+	.email-form textarea {
+		min-height: 200px;
+	}
+</style>
+
+<form id="email-{{ formId }}" class="email-form">
+	<label for="to">To:
+		<select id="to" name="to" required>
+			<option value="">Select a recipient</option>
+			{% for contact in contacts %}
+				<option value="{{ contact.email }}">{{ contact.name }}</option>
+			{% endfor %}
+		</select>
+	</label>
+
+	<label for="from">From:
+		<select id="from" name="from" required>
+			<option value="">Select a sender</option>
+			{% for contact in contacts %}
+				<option value="{{ contact.email }}">{{ contact.name }}</option>
+			{% endfor %}
+		</select>
+	</label>
+
+	<label for="subject">Subject:
+	<input type="text" id="subject" name="subject" max="255" required>
+</label>
+	<label for="body">Body:</label>
+	<textarea id="body" name="body" max="5000" required></textarea>
+
+	<input type="submit" value="Send">
+</form>

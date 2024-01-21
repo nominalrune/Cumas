@@ -19,6 +19,9 @@ class ContactItem
 
     #[ORM\Column(length: 511, nullable: true)]
     private ?string $title = null;
+    
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
 
     #[ORM\Column(length: 255)]
     private ?string $value = null;
@@ -29,51 +32,16 @@ class ContactItem
 
     public function __toString() : string
     {
-        return $this->getValue();
+        return "{$this->getContact()->getName()}<{$this->getValue()}>";
     }
 
     public function __construct()
     {
     }
 
-    public static function create(
-        ContactItemRepository $repository,
-        int $contactId,
-        string $value,
-        ?string $title = null,
-    ) : self {
-        $contact = new self();
-        $contact->setContactId($contactId);
-        $contact->setValue($value);
-        $contact->setTitle($title);
-
-        return $contact;
-    }
-
-    public function update(
-        ContactItemRepository $repository,
-        string $title) : self
-    {
-        $this->setTitle($title);
-
-        return $this;
-    }
-
     public function getId() : ?int
     {
         return $this->id;
-    }
-
-    public function getContactId() : ?int
-    {
-        return $this->contactId;
-    }
-
-    public function setContactId(int $contactId) : static
-    {
-        $this->contactId = $contactId;
-
-        return $this;
     }
 
     public function getType() : ?string
@@ -120,6 +88,29 @@ class ContactItem
     public function setContact(?Contact $contact) : static
     {
         $this->contact = $contact;
+
+        return $this;
+    }
+
+    public static function create(
+        ContactItemRepository $repository,
+        int $contactId,
+        string $value,
+        ?string $title = null,
+    ) : self {
+        $contact = new self();
+        $contact->setContactId($contactId);
+        $contact->setValue($value);
+        $contact->setTitle($title);
+
+        return $contact;
+    }
+
+    public function update(
+        ContactItemRepository $repository,
+        string $title) : self
+    {
+        $this->setTitle($title);
 
         return $this;
     }

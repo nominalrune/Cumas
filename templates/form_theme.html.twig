@@ -1,10 +1,6 @@
 {% extends "form_div_layout.html.twig" %}
 
 {% block entity_collection_widget -%}
-    {# {% if prototype is defined and not prototype.rendered %}
-        {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
-    {% endif %}
-    {{- block('form_widget') -}} #}
     {{ form_label(form) }}<button type="button" class="add_item_link" data-collection-holder-class="{{ name }}">Add</button>
     <ul class="{{ name }}"
         data-index="{{form|length > 0 ? form|length + 1 : 0}}"
