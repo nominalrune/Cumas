@@ -1,4 +1,13 @@
-{{ form_label(form[item_name]) }}<button type="button" class="add_item_link" data-collection-holder-class="{{ item_name }}">Add</button>
+<style>
+	.{{ item_name }}-control{display:flex;gap:1em;}
+	.{{ item_name }}{display:flex;gap:1em;overflow-x:auto;}
+	.{{ item_name }}>li{display:block;}
+</style>
+
+<div class="{{ item_name }}-control">
+	{{ form_label(form[item_name]) }}
+	<button type="button" class="add_item_link" data-collection-holder-class="{{ item_name }}">Add</button>
+</div>
 <ul class="{{ item_name }}"
 	data-index="{{form[item_name]|length > 0 ? form[item_name] |last.vars.name + 1 : 0}}"
 	data-prototype="{{form_widget(form[item_name].vars.prototype)|e('html_attr')}}"
@@ -6,7 +15,6 @@
 	<li></li>
 </ul>
 
-<style>.{{ item_name }}{display:flex;gap:1em;overflow-x:auto;}.{{ item_name }}>li{display:block;}</style>
 
 <script>
 window.addFormToCollection??=(e)=> {

@@ -1,0 +1,58 @@
+{% block index_control_bar -%}
+{{ form_start(form) }}
+<div class="{{form.entity}}-control-bar">
+	<ol>
+		{% for filter in form.filters %}
+			<li>
+				{% if (filter.type === "select") %}
+					<div class="dropdown">
+						<select class="form-control" name="{{ filter.name }}">
+							{% for option in filter.options %}
+								<option value="{{ option.value }}" {% if option.selected %} selected {% endif %}>
+									{{ option.label }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+				{% elseif (filter.type === "text") %}
+					<input type="text" name="{{ filter.name }}">
+				{% endif %}
+			</li>
+		{% endfor %}
+		<li>
+			<button class="">{{ button_label|default('検索') }}</button>
+		</li>
+	</ol>
+</div>
+
+{{ form_widget(form) }}
+
+
+<style>
+	.{{entity}}-control-bar {
+		display: block;
+		margin-bottom: 1rem;
+		border: 1px solid #e9ecef;
+		border-radius: 0.25rem;
+		shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+		& ol {
+			display: flex;
+			flex-wrap: wrap;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			& li {
+				align-items: center;
+				padding: 0.5rem;
+				border-right: 1px solid #e9ecef;
+				&:last-child {
+					border-right: none;
+				}
+				&:hover {
+					background-color: #f8f9fa;
+				}
+			}
+		}
+	}
+</style>
+{{ form_end(form) }}{%- endblock index_control_bar %}
