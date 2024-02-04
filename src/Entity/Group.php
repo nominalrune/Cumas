@@ -26,7 +26,7 @@ class Group
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'groups')]
-    #[ORM\JoinTable(name: '`user_group`')]
+    // #[ORM\JoinTable(name: 'user_group')]
     private Collection $users;
     
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'groups')]
@@ -35,8 +35,8 @@ class Group
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $groups;
 
-    #[ORM\OneToMany(mappedBy: '`group`', targetEntity: UserGroup::class, orphanRemoval: true)]
-    private Collection $userGroups;
+    // #[ORM\OneToMany(mappedBy: '`group`', targetEntity: UserGroup::class, orphanRemoval: true)]
+    // private Collection $userGroups;
 
     #[ORM\OneToMany(mappedBy: '`group`', targetEntity: MailAccount::class)]
     private Collection $mailAccounts;
