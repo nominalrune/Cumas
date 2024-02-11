@@ -3,24 +3,36 @@
 namespace App\Service\Mail;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\FormInterface;
 
 class NewMailComposer
 {
-public function __construct(
-	Sender $sender,
-	){
-	
-}
-	function _($form)
-	{
-		/** @var UploadedFile[] $attachments */
-		$_attachments = $form->get('attachments')->getData();
-		$attachments = [];
-		foreach ($_attachments as $attachment) {
-            // ...
+    public function __construct(
+        private Sender $sender,
+    ) {
+    }
+    function send(FormInterface $form)
+    {
+        /** @var array{from:string,to:string,subject:string,body:string,attachments:string[]} $result  */
+        $result = $this->composeFromForm($form);
 
+        $this->sender->send(
+            $result['from'],
+            $result['to'],
+            $result['subject'],
+            $result['body'],
+            attachments: $result['attachments'],
+            save: true
+        );
+    }
+    private function composeFromForm(FormInterface $form)
+    {
+        /** @var UploadedFile[] $attachments */
+        $attachments = [];
+        $attachmentFiles = $form->get('attachments')->getData();
+        foreach ($attachmentFiles as $attachment) {
             try {
-				$attachment->getContent();
+                $attachments[] = ($attachment->getContent());
                 // $attachment->move(
                 //     $this->getParameter('uploads_dir'),
                 //     $newFilename
@@ -29,14 +41,12 @@ public function __construct(
             } catch (FileException $e) {
                 // ... handle exception if something happens during file upload
             }
-                // Use the Sender service to send the email
-                $this->sender->send(
-                    $form->get('from')->getData(),
-                    $form->get('to')->getData(),
-                    $form->get('subject')->getData(),
-                    $form->get('body')->getData(),
-                    
-                );
+            return [
+                'from' => $form->get('from')->getData(),
+                'to' => $form->get('to')->getData(),
+                'subject' => $form->get('subject')->getData(),
+                'attachments' => $attachments,
+            ];
         }
-	}
+    }
 }

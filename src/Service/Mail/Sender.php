@@ -36,7 +36,7 @@ class Sender
 		return $account;
 	}
 	/**
-	 * send a mail. 
+	 * send a mail. and save to the mail directory
 	 * @param string $sender sender
 	 * @param string $to to
 	 * @param string $subject subject
