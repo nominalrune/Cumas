@@ -243,8 +243,12 @@ classDiagram
 	1. the state of the inquiry is changed to "ongoing"
 ## manage customer information
 ### show the list
-1. login as an agent
-1. show the list of contacts
+条件
+|#|title|value|
+|--|--|--|
+|1|login state|logged in as agent|
+|2|page|contact index|
+
 1. select a contact
 1. show the contact detail
 	1. name
@@ -252,6 +256,11 @@ classDiagram
 	1. phone numbers
 	1. list of inquiries
 ### create new
+
+|#|title|value|
+|--|--|--|
+|1|login state|logged in as agent|
+|2|page|contact index|
 1. login as a manager
 1. show the list of contacts
 1. create a new contact
