@@ -99,7 +99,7 @@ class ContactItem
         ?string $title = null,
     ) : self {
         $contact = new self();
-        $contact->setContactId($contactId);
+        $contact->setContact($contactId);
         $contact->setValue($value);
         $contact->setTitle($title);
 

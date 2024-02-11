@@ -32,7 +32,7 @@ class ContactItemType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'required' => true,
-                'default'=>"メインのメールアドレス",
+                // 'default'=>"メインのメールアドレス",
             ])
             ->add('value')
             ;
