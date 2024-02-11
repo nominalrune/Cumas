@@ -6,7 +6,7 @@ class ChainedException extends \Exception
 {
 	public function __construct(
 		\Exception $error,
-		private string $message = '',
+		protected $message = '',
 		private string $class = '',
 		private string $method,
 	) {

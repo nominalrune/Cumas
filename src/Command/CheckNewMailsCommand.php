@@ -37,20 +37,26 @@ class CheckNewMailsCommand extends Command
         InputInterface $input,
         OutputInterface $output
     ) : int {
-        $this->logger->info("check email start.");
-        $mailCollections = $this->receiver->receiveAll();
+        try {
+            $this->logger->info("check email start.");
+            $mailCollections = $this->receiver->receiveAll();
 
-        foreach ($mailCollections as $collection) {
-            $receiver = $collection['account'];
-            foreach ($collection['mails'] as $mail) {
-                $this->enrollMail($mail, $receiver);
+            foreach ($mailCollections as $collection) {
+                $receiver = $collection['account'];
+                foreach ($collection['mails'] as $mail) {
+                    $this->enrollMail($mail, $receiver);
+                }
             }
-        }
-        
-        $this->logger->info("check email end.");
 
-        // (it's equivalent to returning int(0))
-        return Command::SUCCESS;
+            $this->logger->info("check email end.");
+
+            // (it's equivalent to returning int(0))
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+            echo "error";
+            $this->logger->error($e->getMessage());
+            return Command::FAILURE;
+        }
         // (it's equivalent to returning int(1))
         // return Command::FAILURE;
         // or missing arguments (it's equivalent to returning int(2))
@@ -64,27 +70,29 @@ class CheckNewMailsCommand extends Command
         $from = \mailparse_rfc822_parse_addresses($mail->from)[0];
         $contactItem = $this->getOrCreateContactItem($from);
         $inquiry = $this->getOrCreateInquiry($mail, $contactItem->getContact(), $account);
-        
+
         $filePath = $this->receiver->save('mails/' . $mail->message_id . ".msg", $mail->file);
         $this->logger->info("new mail saved: {$filePath}");
 
         $message = $this->createMessage($mail, $contactItem, $inquiry, $filePath);
         return $message;
     }
-    private function getOrCreateContactItem(array $from){
+    private function getOrCreateContactItem(array $from)
+    {
         $contactItem = $this->contactItemRepo->findOneBy(['value' => $this->crypt->encrypt($from['address'])]);
         // 送信者の連絡先が登録されていなかったら作る
         if (! isset($contactItem)) {
             $contactItem = $this->createContactItem($from);
         }
         $contact = $contactItem->getContact();
-        if(! isset($contact)){
+        if (! isset($contact)) {
             throw new \Exception("contact not found.");
         }
         return $contactItem;
     }
-    
-    private function createContactItem(array $from){
+
+    private function createContactItem(array $from)
+    {
         $contact = new Contact();
         $name = $from['display'] ?? $from['address'];
         $contact->setName($name);
@@ -103,7 +111,7 @@ class CheckNewMailsCommand extends Command
     }
     private function createMessage($mail, ContactItem $contactItem, Inquiry $inquiry, string $filePath)
     {
-        echo "creating message: subject: {$mail->subject}, inquiry:".json_encode($inquiry), PHP_EOL;
+        echo "creating message: subject: {$mail->subject}, inquiry:" . json_encode($inquiry), PHP_EOL;
         $message = new Message();
         $message->setSenderType(0)
             ->setSubject($mail->subject)
@@ -117,8 +125,9 @@ class CheckNewMailsCommand extends Command
         $this->logger->info("new message: {$message->getMessageId()}");
         return $message;
     }
-    
-    private function getOrCreateInquiry($mail, Contact $contact, MailAccount $account){
+
+    private function getOrCreateInquiry($mail, Contact $contact, MailAccount $account)
+    {
         if (property_exists($mail, 'references')) {
             $inquiry = $this->messageRepo->findOneBy(['message_id' => $mail->references])?->getInquiry();
             echo "inquiry found by references: {$inquiry->getId()}", PHP_EOL;
@@ -134,7 +143,7 @@ class CheckNewMailsCommand extends Command
                 ->setDepartment($account->getGroup())
                 ->setCreatedAt($date)
                 ->setUpdatedAt($date);
-            
+
             $this->em->persist($inquiry);
             $this->em->flush();
         }

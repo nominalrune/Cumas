@@ -17,13 +17,13 @@ class Inquiry
     private ?int $id = null;
 
     #[ORM\Column(length: 511)]
-    private ?string $title = null;
+    private ?string $title = "";
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $notes = null;
+    private ?string $notes = "";
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -56,6 +56,8 @@ class Inquiry
     public function __construct(
     ) {
         $this->messages = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public static function create(

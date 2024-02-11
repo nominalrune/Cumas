@@ -25,8 +25,8 @@ class Group
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'groups')]
     // #[ORM\JoinTable(name: 'user_group')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'groups')]
     private Collection $users;
     
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'groups')]
@@ -169,34 +169,34 @@ class Group
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserGroup>
-     */
-    public function getUserGroups() : Collection
-    {
-        return $this->userGroups;
-    }
+    // /**
+    //  * @return Collection<int, UserGroup>
+    //  */
+    // public function getUserGroups() : Collection
+    // {
+    //     return $this->userGroups;
+    // }
 
-    public function addUserGroup(UserGroup $userGroup) : static
-    {
-        if ($userGroup->getGroup()->getId() === $this->id && ! $this->userGroups->contains($userGroup)) {
-            $this->userGroups->add($userGroup);
-        }
+    // public function addUserGroup(UserGroup $userGroup) : static
+    // {
+    //     if ($userGroup->getGroup()->getId() === $this->id && ! $this->userGroups->contains($userGroup)) {
+    //         $this->userGroups->add($userGroup);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeUserGroup(UserGroup $userGroup) : static
-    {
-        if ($this->userGroups->removeElement($userGroup)) {
-            // set the owning side to null (unless already changed)
-            if ($userGroup->getGroup() === $this) {
-                $userGroup->setGroup(null);
-            }
-        }
+    // public function removeUserGroup(UserGroup $userGroup) : static
+    // {
+    //     if ($this->userGroups->removeElement($userGroup)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($userGroup->getGroup() === $this) {
+    //             $userGroup->setGroup(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getUsers() : Collection
     {
@@ -205,10 +205,9 @@ class Group
 
     public function addUser(User $user) : static
     {
-        if (! $this->getUsers()->contains($user)) {
-            $userGroup = UserGroup::create($user, $this);
-            $this->userGroups->add($userGroup);
-            $user->addUserGroup($userGroup);
+        if (! $this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addGroup($this);
         }
 
         return $this;
@@ -216,13 +215,10 @@ class Group
 
     public function removeUser(User $user) : static
     {
-        $userGroup = $this->userGroups->filter(
-            fn (UserGroup $userGroup) => $userGroup->getUser()->id === $user->id
-            )->first();
-        if ($this->userGroups->removeElement($userGroup)) {
+        if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($userGroup->getGroup() === $this) {
-                $userGroup->setGroup(null);
+            if ($user->getGroups()->contains($this)) {
+                $user->removeGroup($this);
             }
         }
 

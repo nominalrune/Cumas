@@ -1,1 +1,1 @@
-php bin/console app:check-mail
+php bin/console app:check-mails

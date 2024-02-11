@@ -27,7 +27,7 @@ class MailAccountType extends AbstractType
             ->add('active', CheckboxType::class, [
                 'required' => false,
             ])
-            ->add('`group`', EntityType::class, [
+            ->add('group', EntityType::class, [
                 'class' => Group::class,
                 'choice_label' => 'name',
                 'required' => false,

@@ -17,10 +17,13 @@ class Message
     #[ORM\Column]
     private ?int $sender_type = null;
 
-    #[ORM\Column(length: 511)]
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $datetime = null;
+    
+    #[ORM\Column(length: 511, nullable: true)]
     private ?string $file = null;
 
-    #[ORM\Column(length: 511)]
+    #[ORM\Column(length: 511, nullable: true)]
     private ?string $messageId = null;
 
     #[ORM\Column(length: 511, nullable: true)]
@@ -137,9 +140,9 @@ class Message
 
     public function getBody()
     {
-        $filepath = getenv('ROOT_DIR') . $this->getFile();
+        $filepath = getenv('STORAGE_PATH'). "/var/www/html/storage". '/mails/' . $this->getFile();
         if (! file_exists($filepath)) {
-            return '';
+            return '(ファイルが見つかりませんでした)'.$filepath;
         }
         $file = file_get_contents($filepath);
         

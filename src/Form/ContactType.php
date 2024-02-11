@@ -14,7 +14,7 @@ class ContactType extends AbstractType
         $builder
             ->add('name')
             ->add('notes')
-            ->add('emails/phones', EntityCollectionType::class,
+            ->add('items', EntityCollectionType::class,
                 [
                     'entry_type' => ContactItemType::class,
                     'entry_options' => ['label' => true],

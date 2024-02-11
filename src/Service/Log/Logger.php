@@ -9,7 +9,8 @@ class Logger
 	private string $time;
 	public function __construct()
 	{
-		$this->logDir = getenv('STORAGE_PATH') . "/log";
+		if(!isset($_ENV['STORAGE_PATH'])) throw new \Exception("STORAGE_PATH is not set.");
+		$this->logDir = $_ENV['STORAGE_PATH'] . "/log";
 		$this->path = $this->logDir . "/" . date("Y-m-d") . ".log";
 		$this->time = "[" . date("Y-m-d h:i:s") . "] ";
 	}

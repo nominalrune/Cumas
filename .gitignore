@@ -1,4 +1,4 @@
-mails/*
+storage/*
 .DS_Store
 ###> symfony/framework-bundle ###
 /.env.local

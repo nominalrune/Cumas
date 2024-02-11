@@ -22,8 +22,20 @@ class ContactController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_contact_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_contact_new', methods: ['GET'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $contact = new Contact();
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+
+        return $this->render('contact/new.html.twig', [
+            'contact' => $contact,
+            'form' => $form,
+        ]);
+    }
+    #[Route('/new', name: 'app_contact_store', methods: ['POST'])]
+    public function store(Request $request, EntityManagerInterface $entityManager): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);

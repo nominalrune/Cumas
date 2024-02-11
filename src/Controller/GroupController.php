@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class GroupController extends AbstractController
 {
     #[Route('/', name: 'app_group_index', methods: ['GET'])]
-    public function index(GroupRepository $groupRepository): Response
+    public function index(GroupRepository $groupRepository) : Response
     {
         return $this->render('group/index.html.twig', [
             'groups' => $groupRepository->findAll(),
@@ -23,13 +23,16 @@ class GroupController extends AbstractController
     }
 
     #[Route('/new', name: 'app_group_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager) : Response
     {
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $now = new \DateTimeImmutable();
+            $group->setCreatedAt($now);
+            $group->setUpdatedAt($now);
             $entityManager->persist($group);
             $entityManager->flush();
 
@@ -43,7 +46,7 @@ class GroupController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_group_show', methods: ['GET'])]
-    public function show(Group $group): Response
+    public function show(Group $group) : Response
     {
         return $this->render('group/show.html.twig', [
             'group' => $group,
@@ -51,7 +54,7 @@ class GroupController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_group_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Group $group, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Group $group, EntityManagerInterface $entityManager) : Response
     {
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
@@ -69,9 +72,9 @@ class GroupController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_group_delete', methods: ['POST'])]
-    public function delete(Request $request, Group $group, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Group $group, EntityManagerInterface $entityManager) : Response
     {
-        if ($this->isCsrfTokenValid('delete'.$group->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $group->getId(), $request->request->get('_token'))) {
             $entityManager->remove($group);
             $entityManager->flush();
         }

@@ -34,26 +34,26 @@ class Contact
         $this->items = new ArrayCollection();
     }
     
-    public static function create(string $name, string $notes): self
-    {
-        $contact = new self();
-        $contact->setName($name);
-        $contact->setNotes($notes);
+    // public static function create(string $name, string $notes): self
+    // {
+    //     $contact = new self();
+    //     $contact->setName($name);
+    //     $contact->setNotes($notes);
 
-        return $contact;
-    }
+    //     return $contact;
+    // }
     
-    public function update(?string $name, ?string $notes): self
-    {
-        if ($name !== null) {
-            $this->setName($name);
-        }
-        if ($notes !== null) {
-            $this->setNotes($notes);
-        }
+    // public function update(?string $name, ?string $notes): self
+    // {
+    //     if ($name !== null) {
+    //         $this->setName($name);
+    //     }
+    //     if ($notes !== null) {
+    //         $this->setNotes($notes);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
     
     public function getId(): ?int
     {

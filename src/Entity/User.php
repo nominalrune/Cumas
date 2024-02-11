@@ -36,8 +36,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\OneToMany(mappedBy: '`user`', targetEntity: UserGroup::class, orphanRemoval: true)]
     // private Collection $userGroups;
 
-    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
     // #[ORM\JoinTable(name: '`user_group`')]
+    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
     private Collection $groups;
 
     #[ORM\OneToMany(mappedBy: 'agent', targetEntity: Inquiry::class)]

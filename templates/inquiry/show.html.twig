@@ -46,20 +46,60 @@
             </tr>
         </tbody>
     </table>
+    <div>
     <table>
         <thead>
             <tr>
-                <th>Message</th>
+                <th colspan="99">Messages</th>
+            </tr>
+            <tr>
+                <th>date</th>
+                <th>sender</th>
+                <th>subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {%for message in inquiry.messages %}
+                    <td>
+                        {{ message.contact }}
+                    </td>
+                    <td>
+                        {{ message.subject }}
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th>本文を表示するメール<select id="selected_message">
+                    {% for message in inquiry.messages %}
+                        <option value="{{ message.id }}">{{ message.subject }}</option>
+                    {% endfor %}
+                </select></th>
+            </tr>
+            <tr>
+                <th>(subject)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>
-                    <pre></pre>
+                    <pre id="messge_body">(body)</pre>
+                    <script>
+                        const messages = ({{ inquiry.messages|map(m=>([m.id,m.body]))|json_encode|raw }}).reduce((acc, curr)=>({...acc,[curr[0]]:curr[1]}, {}));
+                        document.getElementById('selected_message').addEventListener('change', function(){
+                            const selected_message = document.getElementById('selected_message').value;
+                            const message_body = document.getElementById('messge_body');
+                            message_body.innerHTML = messages[selected_message];
+                        });
                 </td>
             </tr>
         </tbody>
     </table>
+    </div>
 </div>
 <a href="{{ path('app_inquiry_index') }}">back to list</a>
 
