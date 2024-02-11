@@ -29,25 +29,24 @@ class MailAccount
 
     #[ORM\Column]
     private ?int $smtpPort = null;
-    
+
     #[ORM\Column(type: "encrypted_string")]
     private ?string $username = null;
 
     #[ORM\Column(type: "encrypted_string")]
     private ?string $password = null;
-    
+
     #[ORM\ManyToOne(inversedBy: 'mailAccounts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Group $group_ = null;
-    
-        #[ORM\Column(type: Types::BOOLEAN)]
-        private ?bool $active = null;
-        
-        
-    #[ORM\Column]
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $active = null;
+
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $lastCheckedAt = null;
-    
-    public function __toString(): string
+
+    public function __toString() : string
     {
         return $this->getName();
     }
@@ -156,19 +155,19 @@ class MailAccount
     {
         return $this->smtpServer;
     }
-    
+
     public function setSMTPServer(string $server) : static
     {
         $this->smtpServer = $server;
 
         return $this;
     }
-    
+
     public function getSMTPPort() : ?int
     {
         return $this->smtpPort;
     }
-    
+
     public function setSMTPPort(int $port) : static
     {
         $this->smtpPort = $port;
@@ -223,12 +222,14 @@ class MailAccount
 
         return $this;
     }
-    
-    public function getLastCheckedAt(){
+
+    public function getLastCheckedAt()
+    {
         return $this->lastCheckedAt;
     }
-    
-    public function setLastCheckedAt(\DateTimeImmutable $datetime){
+
+    public function setLastCheckedAt(\DateTimeImmutable $datetime)
+    {
         $this->lastCheckedAt = $datetime;
     }
 }

@@ -21,11 +21,11 @@
             </tr>
             <tr>
                 <th>Emails</th>
-                <td>{{ contact.emails|map(i=>i.email)|join(', ') }}</td>
+                <td>{{ contact.items|filter(i=>i.type=='email')|map(i=>i.value)|join(', ') }}</td>
             </tr>
             <tr>
                 <th>Phones</th>
-                <td>{{ contact.phones|map(i=>i.phone)|join(', ') }}</td>
+                <td>{{ contact.items|filter(i=>i.type=='phone')|map(i=>i.value)|join(', ') }}</td>
             </tr>
         </tbody>
     </table>
